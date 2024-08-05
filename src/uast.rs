@@ -16,7 +16,7 @@ struct LangMap<'a> {
 }
 
 static UNICODE_MAP: LazyLock<CharMap> = LazyLock::new(|| {
-    return CharMap::from([
+    CharMap::from([
         ("a", 'ā'),
         ("i", 'ī'),
         ("u", 'ū'),
@@ -36,100 +36,98 @@ static UNICODE_MAP: LazyLock<CharMap> = LazyLock::new(|| {
         ("sl", 'ṣ'),
         ("au", 'ã'),
         ("om", 'ॐ'),
-    ]);
+    ])
 });
 
-static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| {
-    return LangMap {
-        misc: CharMap::from([(".", '।'), ("..", '॥'), ("'", 'ऽ'), ("ã", 'ँ')]),
-        numbers: CharMap::from([
-            ("0", '०'),
-            ("1", '१'),
-            ("2", '२'),
-            ("3", '३'),
-            ("4", '४'),
-            ("5", '५'),
-            ("6", '६'),
-            ("7", '७'),
-            ("8", '८'),
-            ("9", '९'),
-        ]),
-        vowels: CharMap::from([
-            ("a", 'अ'),
-            ("ā", 'आ'),
-            ("i", 'इ'),
-            ("ī", 'ई'),
-            ("u", 'उ'),
-            ("ū", 'ऊ'),
-            ("ṛ", 'ऋ'),
-            ("ṝ", 'ॠ'),
-            ("ḷ", 'ऌ'),
-            ("ḹ", 'ॡ'),
-            ("e", 'ए'),
-            ("ai", 'ऐ'),
-            ("o", 'ओ'),
-            ("au", 'औ'),
-        ]),
-        vowel_signs: CharMap::from([
-            ("ā", 'ा'),
-            ("i", 'ि'),
-            ("ī", 'ी'),
-            ("u", 'ु'),
-            ("ū", 'ू'),
-            ("ṛ", 'ृ'),
-            ("ṝ", 'ॄ'),
-            ("ḷ", 'ॢ'),
-            ("ḹ", 'ॣ'),
-            ("e", 'े'),
-            ("ai", 'ै'),
-            ("o", 'ो'),
-            ("au", 'ौ'),
-            ("ṃ", 'ं'),
-            ("ḥ", 'ः'),
-        ]),
-        consonants: CharMap::from([
-            ("k", 'क'),
-            ("kh", 'ख'),
-            ("g", 'ग'),
-            ("gh", 'घ'),
-            ("ṅ", 'ङ'),
-            ("c", 'च'),
-            ("ch", 'छ'),
-            ("j", 'ज'),
-            ("jh", 'झ'),
-            ("ñ", 'ञ'),
-            ("ṭ", 'ट'),
-            ("ṭh", 'ठ'),
-            ("ḍ", 'ड'),
-            ("ḍh", 'ढ'),
-            ("ṇ", 'ण'),
-            ("t", 'त'),
-            ("th", 'थ'),
-            ("d", 'द'),
-            ("dh", 'ध'),
-            ("n", 'न'),
-            ("p", 'प'),
-            ("ph", 'फ'),
-            ("b", 'ब'),
-            ("bh", 'भ'),
-            ("m", 'म'),
-            ("y", 'य'),
-            ("r", 'र'),
-            ("l", 'ल'),
-            ("v", 'व'),
-            ("ś", 'श'),
-            ("ṣ", 'ष'),
-            ("s", 'स'),
-            ("h", 'ह'),
-            ("ḻ", 'ळ'),
-        ]),
-    };
+static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| LangMap {
+    misc: CharMap::from([(".", '।'), ("..", '॥'), ("'", 'ऽ'), ("ã", 'ँ')]),
+    numbers: CharMap::from([
+        ("0", '०'),
+        ("1", '१'),
+        ("2", '२'),
+        ("3", '३'),
+        ("4", '४'),
+        ("5", '५'),
+        ("6", '६'),
+        ("7", '७'),
+        ("8", '८'),
+        ("9", '९'),
+    ]),
+    vowels: CharMap::from([
+        ("a", 'अ'),
+        ("ā", 'आ'),
+        ("i", 'इ'),
+        ("ī", 'ई'),
+        ("u", 'उ'),
+        ("ū", 'ऊ'),
+        ("ṛ", 'ऋ'),
+        ("ṝ", 'ॠ'),
+        ("ḷ", 'ऌ'),
+        ("ḹ", 'ॡ'),
+        ("e", 'ए'),
+        ("ai", 'ऐ'),
+        ("o", 'ओ'),
+        ("au", 'औ'),
+    ]),
+    vowel_signs: CharMap::from([
+        ("ā", 'ा'),
+        ("i", 'ि'),
+        ("ī", 'ी'),
+        ("u", 'ु'),
+        ("ū", 'ू'),
+        ("ṛ", 'ृ'),
+        ("ṝ", 'ॄ'),
+        ("ḷ", 'ॢ'),
+        ("ḹ", 'ॣ'),
+        ("e", 'े'),
+        ("ai", 'ै'),
+        ("o", 'ो'),
+        ("au", 'ौ'),
+        ("ṃ", 'ं'),
+        ("ḥ", 'ः'),
+    ]),
+    consonants: CharMap::from([
+        ("k", 'क'),
+        ("kh", 'ख'),
+        ("g", 'ग'),
+        ("gh", 'घ'),
+        ("ṅ", 'ङ'),
+        ("c", 'च'),
+        ("ch", 'छ'),
+        ("j", 'ज'),
+        ("jh", 'झ'),
+        ("ñ", 'ञ'),
+        ("ṭ", 'ट'),
+        ("ṭh", 'ठ'),
+        ("ḍ", 'ड'),
+        ("ḍh", 'ढ'),
+        ("ṇ", 'ण'),
+        ("t", 'त'),
+        ("th", 'थ'),
+        ("d", 'द'),
+        ("dh", 'ध'),
+        ("n", 'न'),
+        ("p", 'प'),
+        ("ph", 'फ'),
+        ("b", 'ब'),
+        ("bh", 'भ'),
+        ("m", 'म'),
+        ("y", 'य'),
+        ("r", 'र'),
+        ("l", 'ल'),
+        ("v", 'व'),
+        ("ś", 'श'),
+        ("ṣ", 'ष'),
+        ("s", 'स'),
+        ("h", 'ह'),
+        ("ḻ", 'ळ'),
+    ]),
 });
 
 static UNASPIRATED_CONSONANTS: LazyLock<HashSet<char>> =
-    LazyLock::new(|| return HashSet::from(['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ']));
+    LazyLock::new(|| HashSet::from(['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ']));
 
-fn chars_to_string(data: &Vec<char>, start: usize, end: usize) -> String {
+fn chars_to_string(data: &[char], start: usize, end: usize) -> String {
     return data[start..end].iter().collect::<String>();
 }
 
@@ -171,7 +169,7 @@ fn handle_unicode(uast: String) -> Vec<char> {
         i += 1;
     }
 
-    return arr;
+    arr
 }
 
 fn iast_to_devanāgarī(data: Vec<char>) -> String {
@@ -272,11 +270,11 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
     }
 
-    return arr.join("");
+    arr.join("")
 }
 
 pub fn process_uast(line: String) -> String {
-    return iast_to_devanāgarī(handle_unicode(line));
+    iast_to_devanāgarī(handle_unicode(line))
 }
 
 #[cfg(test)]
@@ -284,13 +282,11 @@ mod tests {
     use crate::uast::process_uast;
 
     fn check(s: &str) -> String {
-        return s
-            .to_string()
-            .trim()
+        s.to_string()
             .split_whitespace()
             .map(|x| process_uast(x.to_string()))
             .collect::<Vec<String>>()
-            .join(" ");
+            .join(" ")
     }
 
     #[test]

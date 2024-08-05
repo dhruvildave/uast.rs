@@ -19,7 +19,6 @@ fn main() {
                 }
 
                 let x = l
-                    .trim()
                     .split_whitespace()
                     .map(|x| uast::process_uast(x.to_string()))
                     .collect::<Vec<String>>()
