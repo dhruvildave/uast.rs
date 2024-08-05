@@ -3,5 +3,10 @@ name = "uast"
 version = "0.0.0"
 edition = "2021"
 rust-version = "1.80.0"
+description = "UAST in Rust"
+license = "Apache-2.0"
+publish = false
+authors = ["Dhruvil Dave"]
+repository = "https://github.com/dhruvildave/uast.rs"
 
 [dependencies]
