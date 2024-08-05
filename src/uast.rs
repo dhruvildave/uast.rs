@@ -225,7 +225,10 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
 
         // at this point, if we find any illegal character then we simply ignore it
         let k = data[i].to_string();
-        if !CHAR_DICT.vowel_signs.contains_key(&k.as_str()) && !CHAR_DICT.vowels.contains_key(&k.as_str()) && !CHAR_DICT.consonants.contains_key(&k.as_str()) {
+        if !CHAR_DICT.vowel_signs.contains_key(&k.as_str())
+            && !CHAR_DICT.vowels.contains_key(&k.as_str())
+            && !CHAR_DICT.consonants.contains_key(&k.as_str())
+        {
             i += 1;
             continue;
         }
@@ -245,9 +248,13 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             }
         }
 
-
         // if end of word or anything other than a vowel-sign then we just push a halanta and start the process again
-        if i == data.len() || (!CHAR_DICT.vowel_signs.contains_key(data[i].to_string().as_str()) && data[i] != 'a') {
+        if i == data.len()
+            || (!CHAR_DICT
+                .vowel_signs
+                .contains_key(data[i].to_string().as_str())
+                && data[i] != 'a')
+        {
             arr.push("्".to_string());
             continue;
         }
@@ -257,7 +264,9 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             i += 2;
         } else {
             if data[i] != 'a' {
-                arr.push(CHAR_DICT.vowel_signs[chars_to_string(&data, i, i + 1).as_str()].to_string());
+                arr.push(
+                    CHAR_DICT.vowel_signs[chars_to_string(&data, i, i + 1).as_str()].to_string(),
+                );
             }
             i += 1;
         }
@@ -268,4 +277,37 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
 
 pub fn process_uast(line: String) -> String {
     return iast_to_devanāgarī(handle_unicode(line));
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::uast::process_uast;
+
+    fn check(s: &str) -> String {
+        return s
+            .to_string()
+            .trim()
+            .split_whitespace()
+            .map(|x| process_uast(x.to_string()))
+            .collect::<Vec<String>>()
+            .join(" ");
+    }
+
+    #[test]
+    fn test_process_uast() {
+        assert_eq!(
+            check("ma/nu/gala/m/ bhagav/a/nvi/sl//nl/urma/nu/gala/m/ garu/d/adhvaja/h/. ma/nu/gala/m/ pu/nl//d/ar/i/k/a/k/sl/o ma/nu/gal/a/yatana/m/ hari/h/.."),
+            "मङ्गलं भगवान्विष्णुर्मङ्गलं गरुडध्वजः। मङ्गलं पुण्डरीकाक्षो मङ्गलायतनं हरिः॥"
+        );
+
+        assert_eq!(
+            check("/om/ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt.."),
+            "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥"
+        );
+
+        assert_eq!(
+            check("agnimīḻe purohitaṃ yajñasya devamṛtvijam. hotāraṃ ratnadhātamam.. agniḥ pūrvebhirṛṣibhirīḍyo nūtanairūta. sa devāã eha vakṣati.. agninā rayimaśnavatpoṣameva divedive. yaśasaṃ vīravattamam.. agne yaṃ yajñamadhvaraṃ viśvataḥ paribhūrasi. sa iddeveṣu gacchati.. agnirhotā kavikratuḥ satyaścitraśravastamaḥ. devo devebhirā gamat.. yadaṅga dāśuṣe tvamagne bhadraṃ kariṣyasi. tavettatsatyamaṅgiraḥ.. upa tvāgne divedive doṣāvastardhiyā vayam. namo bharanta emasi.. rājantamadhvarāṇāṃ gopāmṛtasya dīdivim. vardhamānaṃ sve dame.. sa naḥ piteva sūnave'gne sūpāyano bhava. sacasvā naḥ svastaye.."),
+            "अग्निमीळे पुरोहितं यज्ञस्य देवमृत्विजम्। होतारं रत्नधातमम्॥ अग्निः पूर्वेभिरृषिभिरीड्यो नूतनैरूत। स देवाँ एह वक्षति॥ अग्निना रयिमश्नवत्पोषमेव दिवेदिवे। यशसं वीरवत्तमम्॥ अग्ने यं यज्ञमध्वरं विश्वतः परिभूरसि। स इद्देवेषु गच्छति॥ अग्निर्होता कविक्रतुः सत्यश्चित्रश्रवस्तमः। देवो देवेभिरा गमत्॥ यदङ्ग दाशुषे त्वमग्ने भद्रं करिष्यसि। तवेत्तत्सत्यमङ्गिरः॥ उप त्वाग्ने दिवेदिवे दोषावस्तर्धिया वयम्। नमो भरन्त एमसि॥ राजन्तमध्वराणां गोपामृतस्य दीदिविम्। वर्धमानं स्वे दमे॥ स नः पितेव सूनवेऽग्ने सूपायनो भव। सचस्वा नः स्वस्तये॥"
+        );
+    }
 }

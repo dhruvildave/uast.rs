@@ -2,8 +2,6 @@
 
 use std::io;
 
-use uast::*;
-
 mod uast;
 
 fn main() {
@@ -23,7 +21,7 @@ fn main() {
                 let x = l
                     .trim()
                     .split_whitespace()
-                    .map(|x| process_uast(x.to_string()))
+                    .map(|x| uast::process_uast(x.to_string()))
                     .collect::<Vec<String>>()
                     .join(" ");
                 println!("{x}");
