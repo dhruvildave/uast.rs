@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY: all format clean test
+.PHONY: all format clean test docker
 
 all:
 	cargo b -v -r
@@ -10,5 +10,8 @@ format:
 clean:
 	cargo clean
 
+docker:
+	docker build -t uast . && docker system prune -f
+
 test:
-	cargo test -v
+	cargo t -v
