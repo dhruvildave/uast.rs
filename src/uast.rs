@@ -128,7 +128,7 @@ static UNASPIRATED_CONSONANTS: LazyLock<HashSet<char>> =
     LazyLock::new(|| HashSet::from(['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ']));
 
 fn chars_to_string(data: &[char], start: usize, end: usize) -> String {
-    return data[start..end].iter().collect::<String>();
+    data[start..end].iter().collect::<String>()
 }
 
 fn handle_unicode(uast: String) -> Vec<char> {
