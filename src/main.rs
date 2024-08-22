@@ -3,6 +3,7 @@
 use std::{env, io};
 
 mod iast;
+mod tests;
 mod uast;
 
 fn main() {
