@@ -30,21 +30,20 @@ fn main() {
                     return;
                 }
 
-                if devanāgarī_mode {
-                    let x = l
-                        .split_whitespace()
-                        .map(|x| uast::process_uast(x.to_string()))
-                        .collect::<Vec<String>>()
-                        .join(" ");
-                    println!("{x}");
-                } else {
-                    let x = l
-                        .split_whitespace()
-                        .map(|x| iast::devanāgarī_to_iast(x.to_string()))
-                        .collect::<Vec<String>>()
-                        .join(" ");
-                    println!("{x}");
-                }
+                println!(
+                    "{}",
+                    if devanāgarī_mode {
+                        l.split_whitespace()
+                            .map(|x| uast::process_uast(x.to_string()))
+                            .collect::<Vec<String>>()
+                            .join(" ")
+                    } else {
+                        l.split_whitespace()
+                            .map(|x| iast::devanāgarī_to_iast(x.to_string()))
+                            .collect::<Vec<String>>()
+                            .join(" ")
+                    }
+                );
             }
         };
     }
