@@ -2,6 +2,7 @@
 
 use std::io;
 
+mod iast;
 mod uast;
 
 fn main() {

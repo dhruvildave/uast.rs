@@ -1,0 +1,15 @@
+{
+  "name": "uast.rs",
+  "image": "mcr.microsoft.com/devcontainers/rust",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "ms-vscode.makefile-tools"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  }
+}
