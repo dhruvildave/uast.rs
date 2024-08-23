@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY: all format clean test docker
+.PHONY: all format clean test docker install
 
 all:
 	cargo b -v -r
@@ -12,6 +12,9 @@ clean:
 
 docker:
 	docker build -t uast . && docker system prune -f
+
+install:
+	cargo install -v --path .
 
 test:
 	cargo t -v

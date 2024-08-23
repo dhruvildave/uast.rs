@@ -8,6 +8,8 @@ license = "Apache-2.0"
 publish = false
 authors = ["Dhruvil Dave"]
 repository = "https://github.com/dhruvildave/uast.rs"
+readme = "README.md"
 
 [profile.release]
 strip = true
+lto = true

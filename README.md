@@ -12,6 +12,12 @@ To install this program, you will need to install [Rust](https://rust-lang.org)
 After that, simply run:
 
 ```bash
+cargo install --git https://github.com/dhruvildave/uast.rs
+```
+
+To build locally,
+
+```bash
 make
 ```
 
