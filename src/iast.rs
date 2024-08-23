@@ -144,31 +144,33 @@ pub fn devanāgarī_to_iast(dn: String) -> String {
         if let Some(c) = CONSONANTS.get(&str[i]) {
             arr.push((*c).to_string());
 
-            if i + 1 < str.len() {
-                let v = str[i + 1];
-                if v == '्' {
-                    i += 2;
-                    continue;
-                }
-
-                if let Some(s) = VOWEL_SIGNS.get(&v) {
-                    arr.push((*s).to_string());
-                    i += 2;
-                    continue;
-                }
-
-                if CONSONANTS.contains_key(&v)
-                    || MISC.contains_key(&v)
-                    || v == 'ं'
-                    || v == 'ः'
-                    || v == 'ँ'
-                {
-                    arr.push("a".to_string());
-                    i += 1;
-                    continue;
-                }
-            } else {
+            if i + 1 == str.len() {
                 arr.push("a".to_string());
+                i += 1;
+                continue;
+            }
+
+            let v = str[i + 1];
+            if v == '्' {
+                i += 2;
+                continue;
+            }
+
+            if let Some(s) = VOWEL_SIGNS.get(&v) {
+                arr.push((*s).to_string());
+                i += 2;
+                continue;
+            }
+
+            if CONSONANTS.contains_key(&v)
+                || MISC.contains_key(&v)
+                || v == 'ं'
+                || v == 'ः'
+                || v == 'ँ'
+            {
+                arr.push("a".to_string());
+                i += 1;
+                continue;
             }
         }
 
