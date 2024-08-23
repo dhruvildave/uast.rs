@@ -273,6 +273,6 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     arr.join("")
 }
 
-pub fn process_uast(line: String) -> String {
+pub(crate) fn process_uast(line: String) -> String {
     iast_to_devanāgarī(handle_unicode(line))
 }

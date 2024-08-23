@@ -97,7 +97,7 @@ static MISC: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
     ])
 });
 
-pub fn devanāgarī_to_iast(dn: String) -> String {
+pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
     let str = dn.to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<String>::with_capacity(str.len());
