@@ -1,25 +1,22 @@
 //! Driver-code
 
-use std::process::ExitCode;
 use std::{env, io};
 
 mod iast;
 mod tests;
 mod uast;
 
-fn main() -> ExitCode {
+fn main() -> Result<(), String> {
     let mut args = env::args();
     if args.len() != 2 {
-        eprintln!("Invalid number of arguments. Usage: uast d|i|h");
-        return ExitCode::FAILURE;
+        return Err("Invalid number of arguments. Usage: uast d|i|h".to_string());
     }
 
     let devanāgarī_mode = match args.nth(1).unwrap().as_str() {
         "d" => true,
         "i" => false,
         _ => {
-            eprintln!("Usage: uast d|i|h");
-            return ExitCode::FAILURE;
+            return Err("Usage: uast d|i|h".to_string());
         }
     };
 
@@ -28,13 +25,12 @@ fn main() -> ExitCode {
 
         match io::stdin().read_line(&mut l) {
             Err(e) => {
-                eprintln!("{e}");
-                return ExitCode::FAILURE;
+                return Err(e.to_string());
             }
 
             Ok(e) => {
                 if e == 0 {
-                    return ExitCode::SUCCESS;
+                    return Ok(());
                 }
 
                 println!(
