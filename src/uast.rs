@@ -140,32 +140,32 @@ fn handle_unicode(uast: String) -> Vec<char> {
     while i < str.len() {
         let curr = str[i];
 
-        if curr == '/' {
-            let mut c = String::with_capacity(2);
-
-            for j in (i + 1)..str.len() {
-                let curr = str[j];
-                if curr == '/' {
-                    i = j;
-                    break;
-                }
-
-                if j == str.len() - 1 {
-                    i = j;
-                }
-
-                c.push(curr);
-            }
-
-            if let Some(v) = UNICODE_MAP.get(c.as_str()) {
-                arr.push(*v);
-            }
-
+        if curr != '/' {
+            arr.push(curr);
             i += 1;
             continue;
         }
 
-        arr.push(curr);
+        let mut c = String::with_capacity(2);
+
+        for j in (i + 1)..str.len() {
+            let curr = str[j];
+            if curr == '/' {
+                i = j;
+                break;
+            }
+
+            if j == str.len() - 1 {
+                i = j;
+            }
+
+            c.push(curr);
+        }
+
+        if let Some(v) = UNICODE_MAP.get(c.as_str()) {
+            arr.push(*v);
+        }
+
         i += 1;
     }
 
