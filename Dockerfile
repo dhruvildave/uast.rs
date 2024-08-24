@@ -18,17 +18,7 @@ RUN --mount=type=bind,source=src,target=src \
     make && \
     cp ./target/release/uast /bin/uast
 
-FROM alpine AS final
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-USER appuser
+FROM scratch AS final
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/uast /bin/
