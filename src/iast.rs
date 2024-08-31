@@ -3,8 +3,26 @@
 use std::collections::HashMap;
 use std::sync::LazyLock;
 
-static VOWELS: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
-    HashMap::from([
+type CharMap<'a> = HashMap<char, &'a str>;
+
+struct ScriptSpecials {
+    om: char,
+    halanta: char,
+    visarga: char,
+    anusvāra: char,
+    candrabindu: char,
+}
+
+struct Script<'a> {
+    vowels: CharMap<'a>,
+    vowel_signs: CharMap<'a>,
+    consonants: CharMap<'a>,
+    misc: CharMap<'a>,
+    specials: ScriptSpecials,
+}
+
+static CHAR_DICT: LazyLock<Script> = LazyLock::new(|| Script {
+    vowels: CharMap::from([
         ('अ', "a"),
         ('आ', "ā"),
         ('इ', "i"),
@@ -19,11 +37,8 @@ static VOWELS: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
         ('ऐ', "ai"),
         ('ओ', "o"),
         ('औ', "au"),
-    ])
-});
-
-static VOWEL_SIGNS: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
-    HashMap::from([
+    ]),
+    vowel_signs: CharMap::from([
         ('ा', "ā"),
         ('ि', "i"),
         ('ी', "ī"),
@@ -37,11 +52,8 @@ static VOWEL_SIGNS: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
         ('ै', "ai"),
         ('ो', "o"),
         ('ौ', "au"),
-    ])
-});
-
-static CONSONANTS: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
-    HashMap::from([
+    ]),
+    consonants: CharMap::from([
         ('क', "k"),
         ('ख', "kh"),
         ('ग', "g"),
@@ -76,11 +88,8 @@ static CONSONANTS: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
         ('स', "s"),
         ('ह', "h"),
         ('ळ', "ḻ"),
-    ])
-});
-
-static MISC: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
-    HashMap::from([
+    ]),
+    misc: CharMap::from([
         ('ऽ', "'"),
         ('।', "."),
         ('॥', ".."),
@@ -94,7 +103,14 @@ static MISC: LazyLock<HashMap<char, &str>> = LazyLock::new(|| {
         ('७', "7"),
         ('८', "8"),
         ('९', "9"),
-    ])
+    ]),
+    specials: ScriptSpecials {
+        om: 'ॐ',
+        anusvāra: 'ं',
+        visarga: 'ः',
+        candrabindu: 'ँ',
+        halanta: '्',
+    },
 });
 
 pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
@@ -105,43 +121,43 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
     let mut i = 0;
 
     // if starts with vowel
-    if let Some(v) = VOWELS.get(&str[i]) {
+    if let Some(v) = CHAR_DICT.vowels.get(&str[i]) {
         arr.push((*v).to_string());
         i += 1;
     }
 
     while i < str.len() {
-        if str[i] == 'ॐ' {
+        if str[i] == CHAR_DICT.specials.om {
             arr.push(str[i].to_string());
             i += 1;
             continue;
         }
 
-        if let Some(v) = MISC.get(&str[i]) {
+        if let Some(v) = CHAR_DICT.misc.get(&str[i]) {
             arr.push((*v).to_string());
             i += 1;
             continue;
         }
 
-        if str[i] == 'ं' {
+        if str[i] == CHAR_DICT.specials.anusvāra {
             arr.push("ṃ".to_string());
             i += 1;
             continue;
         }
 
-        if str[i] == 'ः' {
+        if str[i] == CHAR_DICT.specials.visarga {
             arr.push("ḥ".to_string());
             i += 1;
             continue;
         }
 
-        if str[i] == 'ँ' {
+        if str[i] == CHAR_DICT.specials.candrabindu {
             arr.push("ã".to_string());
             i += 1;
             continue;
         }
 
-        if let Some(c) = CONSONANTS.get(&str[i]) {
+        if let Some(c) = CHAR_DICT.consonants.get(&str[i]) {
             arr.push((*c).to_string());
 
             if i + 1 == str.len() {
@@ -151,22 +167,22 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
             }
 
             let v = str[i + 1];
-            if v == '्' {
+            if v == CHAR_DICT.specials.halanta {
                 i += 2;
                 continue;
             }
 
-            if let Some(s) = VOWEL_SIGNS.get(&v) {
+            if let Some(s) = CHAR_DICT.vowel_signs.get(&v) {
                 arr.push((*s).to_string());
                 i += 2;
                 continue;
             }
 
-            if CONSONANTS.contains_key(&v)
-                || MISC.contains_key(&v)
-                || v == 'ं'
-                || v == 'ः'
-                || v == 'ँ'
+            if CHAR_DICT.consonants.contains_key(&v)
+                || CHAR_DICT.misc.contains_key(&v)
+                || v == CHAR_DICT.specials.anusvāra
+                || v == CHAR_DICT.specials.visarga
+                || v == CHAR_DICT.specials.candrabindu
             {
                 arr.push("a".to_string());
                 i += 1;

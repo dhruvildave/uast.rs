@@ -7,12 +7,18 @@ use std::{
 
 type CharMap<'a> = HashMap<&'a str, char>;
 
+struct ScriptSpecials {
+    om: char,
+    halanta: char,
+}
+
 struct LangMap<'a> {
     misc: CharMap<'a>,
     numbers: CharMap<'a>,
     vowels: CharMap<'a>,
     vowel_signs: CharMap<'a>,
     consonants: CharMap<'a>,
+    specials: ScriptSpecials,
 }
 
 static UNICODE_MAP: LazyLock<CharMap> = LazyLock::new(|| {
@@ -122,6 +128,10 @@ static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| LangMap {
         ("h", 'ह'),
         ("ḻ", 'ळ'),
     ]),
+    specials: ScriptSpecials {
+        om: 'ॐ',
+        halanta: '्',
+    },
 });
 
 static UNASPIRATED_CONSONANTS: LazyLock<HashSet<char>> =
@@ -198,8 +208,8 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     }
 
     while i < data.len() {
-        if data[i] == 'ॐ' {
-            arr.push("ॐ".to_string());
+        if data[i] == CHAR_DICT.specials.om {
+            arr.push(CHAR_DICT.specials.om.to_string());
             i += 1;
             continue;
         }
@@ -253,7 +263,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
                 .contains_key(data[i].to_string().as_str())
                 && data[i] != 'a')
         {
-            arr.push("्".to_string());
+            arr.push(CHAR_DICT.specials.halanta.to_string());
             continue;
         }
 
