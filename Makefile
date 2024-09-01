@@ -11,7 +11,7 @@ clean:
 	cargo clean
 
 docker:
-	docker build -t uast . && docker system prune -f
+	docker build --pull -t uast . && docker system prune -f
 
 install:
 	cargo install -v --path .
