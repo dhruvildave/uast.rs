@@ -37,12 +37,12 @@ fn main() -> Result<(), String> {
                     "{}",
                     if devanāgarī_mode {
                         l.split_whitespace()
-                            .map(|x| uast::process_uast(x.to_string()))
+                            .map(|x| uast::process_uast("sa", x.to_string()))
                             .collect::<Vec<String>>()
                             .join(" ")
                     } else {
                         l.split_whitespace()
-                            .map(|x| iast::devanāgarī_to_iast(x.to_string()))
+                            .map(|x| iast::devanāgarī_to_iast("sa", x.to_string()))
                             .collect::<Vec<String>>()
                             .join(" ")
                     }

@@ -2,13 +2,13 @@
 
 #[cfg(test)]
 
-fn check<F>(s: &str, f: F) -> String
+fn check<F>(s: &str, f: F, script: &str) -> String
 where
-    F: Fn(String) -> String,
+    F: Fn(&str, String) -> String,
 {
     s.to_string()
         .split_whitespace()
-        .map(|x| f(x.to_string()))
+        .map(|x| f(script, x.to_string()))
         .collect::<Vec<String>>()
         .join(" ")
 }
@@ -24,7 +24,7 @@ fn test_process_uast() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(check(k, process_uast), v);
+        assert_eq!(check(k, process_uast, "sa"), v);
     }
 }
 
@@ -39,6 +39,6 @@ fn test_devanāgarī_to_iast() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(check(k, devanāgarī_to_iast), v);
+        assert_eq!(check(k, devanāgarī_to_iast, "sa"), v);
     }
 }
