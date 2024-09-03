@@ -8,15 +8,15 @@ mod uast;
 
 fn main() -> Result<(), String> {
     let mut args = env::args();
-    if args.len() != 2 {
-        return Err("Invalid number of arguments. Usage: uast d|i|h".to_string());
+    if args.len() > 2 {
+        return Err("Invalid number of arguments. Usage: uast [d|i|h]".to_string());
     }
 
-    let devanāgarī_mode = match args.nth(1).unwrap().as_str() {
+    let devanāgarī_mode = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
         "d" => true,
         "i" => false,
         _ => {
-            return Err("Usage: uast d|i|h".to_string());
+            return Err("Usage: uast [d|i|h]".to_string());
         }
     };
 
