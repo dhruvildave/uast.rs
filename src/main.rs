@@ -12,9 +12,9 @@ fn main() -> Result<(), String> {
         return Err("Invalid number of arguments. Usage: uast [d|i|h]".to_string());
     }
 
-    let devanāgarī_mode = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
-        "d" => true,
-        "i" => false,
+    let f = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
+        "d" => uast::process_uast,
+        "i" => iast::devanāgarī_to_iast,
         _ => {
             return Err("Usage: uast [d|i|h]".to_string());
         }
@@ -35,17 +35,10 @@ fn main() -> Result<(), String> {
 
                 println!(
                     "{}",
-                    if devanāgarī_mode {
-                        l.split_whitespace()
-                            .map(|x| uast::process_uast(x.to_string()))
-                            .collect::<Vec<String>>()
-                            .join(" ")
-                    } else {
-                        l.split_whitespace()
-                            .map(|x| iast::devanāgarī_to_iast(x.to_string()))
-                            .collect::<Vec<String>>()
-                            .join(" ")
-                    }
+                    l.split_whitespace()
+                        .map(|x| f(x.to_string()))
+                        .collect::<Vec<String>>()
+                        .join(" ")
                 );
             }
         };
