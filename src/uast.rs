@@ -214,7 +214,8 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             continue;
         }
 
-        if let Some(v) = CHAR_DICT.misc.get(data[i].to_string().as_str()) {
+        let c = data[i].to_string();
+        if let Some(v) = CHAR_DICT.misc.get(c.as_str()) {
             if i + 1 < data.len() && data[i] == '.' && data[i + 1] == '.' {
                 arr.push(CHAR_DICT.misc[".."].to_string());
                 i += 2;
@@ -225,17 +226,16 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             continue;
         }
 
-        if let Some(v) = CHAR_DICT.numbers.get(data[i].to_string().as_str()) {
+        if let Some(v) = CHAR_DICT.numbers.get(c.as_str()) {
             arr.push(v.to_string());
             i += 1;
             continue;
         }
 
         // at this point, if we find any illegal character then we simply ignore it
-        let k = data[i].to_string();
-        if !CHAR_DICT.vowel_signs.contains_key(&k.as_str())
-            && !CHAR_DICT.vowels.contains_key(&k.as_str())
-            && !CHAR_DICT.consonants.contains_key(&k.as_str())
+        if !CHAR_DICT.vowel_signs.contains_key(&c.as_str())
+            && !CHAR_DICT.vowels.contains_key(&c.as_str())
+            && !CHAR_DICT.consonants.contains_key(&c.as_str())
         {
             i += 1;
             continue;
