@@ -32,11 +32,11 @@ fn main() -> Result<(), Error> {
                 return Err(e);
             }
 
-            Ok(e) => {
-                if e == 0 {
-                    return Ok(());
-                }
+            Ok(0) => {
+                return Ok(());
+            }
 
+            _ => {
                 println!(
                     "{}",
                     l.split_whitespace()
