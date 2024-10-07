@@ -183,6 +183,10 @@ fn handle_unicode(uast: String) -> Vec<char> {
 }
 
 fn iast_to_devanāgarī(data: Vec<char>) -> String {
+    if data.is_empty() {
+        return "".to_string();
+    }
+
     let mut arr = Vec::<String>::with_capacity(data.len());
     let mut i = 0;
 
