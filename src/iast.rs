@@ -1,9 +1,6 @@
 //! देवनागरी to IAST
 
-use std::collections::HashMap;
-use std::sync::LazyLock;
-
-type CharMap<'a> = HashMap<char, &'a str>;
+type T<'a> = (char, &'a str);
 
 struct ScriptSpecials {
     om: char,
@@ -14,15 +11,15 @@ struct ScriptSpecials {
 }
 
 struct Script<'a> {
-    vowels: CharMap<'a>,
-    vowel_signs: CharMap<'a>,
-    consonants: CharMap<'a>,
-    misc: CharMap<'a>,
+    vowels: [T<'a>; 14],
+    vowel_signs: [T<'a>; 13],
+    consonants: [T<'a>; 34],
+    misc: [T<'a>; 13],
     specials: ScriptSpecials,
 }
 
-static CHAR_DICT: LazyLock<Script> = LazyLock::new(|| Script {
-    vowels: CharMap::from([
+static CHAR_DICT: Script = Script {
+    vowels: [
         ('अ', "a"),
         ('आ', "ā"),
         ('इ', "i"),
@@ -37,8 +34,8 @@ static CHAR_DICT: LazyLock<Script> = LazyLock::new(|| Script {
         ('ऐ', "ai"),
         ('ओ', "o"),
         ('औ', "au"),
-    ]),
-    vowel_signs: CharMap::from([
+    ],
+    vowel_signs: [
         ('ा', "ā"),
         ('ि', "i"),
         ('ी', "ī"),
@@ -52,8 +49,8 @@ static CHAR_DICT: LazyLock<Script> = LazyLock::new(|| Script {
         ('ै', "ai"),
         ('ो', "o"),
         ('ौ', "au"),
-    ]),
-    consonants: CharMap::from([
+    ],
+    consonants: [
         ('क', "k"),
         ('ख', "kh"),
         ('ग', "g"),
@@ -88,8 +85,8 @@ static CHAR_DICT: LazyLock<Script> = LazyLock::new(|| Script {
         ('स', "s"),
         ('ह', "h"),
         ('ळ', "ḻ"),
-    ]),
-    misc: CharMap::from([
+    ],
+    misc: [
         ('ऽ', "'"),
         ('।', "."),
         ('॥', ".."),
@@ -103,7 +100,7 @@ static CHAR_DICT: LazyLock<Script> = LazyLock::new(|| Script {
         ('७', "7"),
         ('८', "8"),
         ('९', "9"),
-    ]),
+    ],
     specials: ScriptSpecials {
         om: 'ॐ',
         anusvāra: 'ं',
@@ -111,7 +108,39 @@ static CHAR_DICT: LazyLock<Script> = LazyLock::new(|| Script {
         candrabindu: 'ँ',
         halanta: '्',
     },
-});
+};
+
+fn get_vowel(c: char) -> Option<String> {
+    if let Some(s) = CHAR_DICT.vowels.iter().find(|x| x.0 == c) {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
+
+fn get_misc(c: char) -> Option<String> {
+    if let Some(s) = CHAR_DICT.misc.iter().find(|x| x.0 == c) {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
+
+fn get_vowelsign(c: char) -> Option<String> {
+    if let Some(s) = CHAR_DICT.vowel_signs.iter().find(|x| x.0 == c) {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
+
+fn get_consonant(c: char) -> Option<String> {
+    if let Some(s) = CHAR_DICT.consonants.iter().find(|x| x.0 == c) {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
 
 pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
     let str = dn.to_lowercase().chars().collect::<Vec<char>>();
@@ -121,8 +150,8 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
     let mut i = 0;
 
     // if starts with vowel
-    if let Some(v) = CHAR_DICT.vowels.get(&str[i]) {
-        arr.push(v.to_string());
+    if let Some(v) = get_vowel(str[i]) {
+        arr.push(v);
         i += 1;
     }
 
@@ -133,8 +162,8 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
             continue;
         }
 
-        if let Some(v) = CHAR_DICT.misc.get(&str[i]) {
-            arr.push(v.to_string());
+        if let Some(v) = get_misc(str[i]) {
+            arr.push(v);
             i += 1;
             continue;
         }
@@ -157,8 +186,8 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
             continue;
         }
 
-        if let Some(c) = CHAR_DICT.consonants.get(&str[i]) {
-            arr.push(c.to_string());
+        if let Some(c) = get_consonant(str[i]) {
+            arr.push(c);
 
             if i + 1 == str.len() {
                 arr.push("a".to_string());
@@ -172,14 +201,14 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
                 continue;
             }
 
-            if let Some(s) = CHAR_DICT.vowel_signs.get(&v) {
-                arr.push(s.to_string());
+            if let Some(s) = get_vowelsign(v) {
+                arr.push(s);
                 i += 2;
                 continue;
             }
 
-            if CHAR_DICT.consonants.contains_key(&v)
-                || CHAR_DICT.misc.contains_key(&v)
+            if CHAR_DICT.consonants.iter().any(|c| c.0 == v)
+                || CHAR_DICT.misc.iter().any(|c| c.0 == v)
                 || v == CHAR_DICT.specials.anusvāra
                 || v == CHAR_DICT.specials.visarga
                 || v == CHAR_DICT.specials.candrabindu
