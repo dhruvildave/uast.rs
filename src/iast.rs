@@ -122,7 +122,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
 
     // if starts with vowel
     if let Some(v) = CHAR_DICT.vowels.get(&str[i]) {
-        arr.push((*v).to_string());
+        arr.push(v.to_string());
         i += 1;
     }
 
@@ -134,7 +134,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
         }
 
         if let Some(v) = CHAR_DICT.misc.get(&str[i]) {
-            arr.push((*v).to_string());
+            arr.push(v.to_string());
             i += 1;
             continue;
         }
@@ -158,7 +158,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
         }
 
         if let Some(c) = CHAR_DICT.consonants.get(&str[i]) {
-            arr.push((*c).to_string());
+            arr.push(c.to_string());
 
             if i + 1 == str.len() {
                 arr.push("a".to_string());
@@ -173,7 +173,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
             }
 
             if let Some(s) = CHAR_DICT.vowel_signs.get(&v) {
-                arr.push((*s).to_string());
+                arr.push(s.to_string());
                 i += 2;
                 continue;
             }
