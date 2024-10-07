@@ -1,4 +1,4 @@
-//! Devanāgarī to IAST
+//! देवनागरी to IAST
 
 use std::collections::HashMap;
 use std::sync::LazyLock;

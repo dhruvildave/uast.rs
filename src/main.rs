@@ -3,6 +3,7 @@
 use std::io::{Error, ErrorKind};
 use std::{env, io};
 
+mod gu;
 mod iast;
 mod tests;
 mod uast;
@@ -12,15 +13,16 @@ fn main() -> Result<(), Error> {
     if args.len() > 2 {
         return Err(Error::new(
             ErrorKind::InvalidInput,
-            "Invalid number of arguments. Usage: uast [d|i|h]",
+            "Invalid number of arguments. Usage: uast [d|i|h|g]",
         ));
     }
 
     let f = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
         "d" => uast::process_uast,
         "i" => iast::devanāgarī_to_iast,
+        "g" => gu::devanāgarī_to_gujarātī,
         _ => {
-            return Err(Error::new(ErrorKind::InvalidInput, "Usage: uast [d|i|h]"));
+            return Err(Error::new(ErrorKind::InvalidInput, "Usage: uast [d|i|h|g]"));
         }
     };
 
