@@ -1,8 +1,7 @@
 [package]
 name = "uast"
-version = "1.4.0"
+version = "1.4.1"
 edition = "2021"
-rust-version = "1.80.0"
 description = "UAST in Rust 🦀"
 license = "Apache-2.0"
 authors = ["Dhruvil Dave"]
