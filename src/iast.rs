@@ -1,6 +1,6 @@
 //! देवनागरी to IAST
 
-type T<'a> = (char, &'a str);
+type T = (char, &'static str);
 
 struct ScriptSpecials {
     om: char,
@@ -10,11 +10,11 @@ struct ScriptSpecials {
     candrabindu: char,
 }
 
-struct Script<'a> {
-    vowels: [T<'a>; 14],
-    vowel_signs: [T<'a>; 13],
-    consonants: [T<'a>; 34],
-    misc: [T<'a>; 13],
+struct Script {
+    vowels: [T; 14],
+    vowel_signs: [T; 13],
+    consonants: [T; 34],
+    misc: [T; 13],
     specials: ScriptSpecials,
 }
 

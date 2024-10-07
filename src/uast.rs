@@ -1,53 +1,46 @@
 //! Rust implementation of [Unicode Aware Saṃskṛta Transliteration](https://arxiv.org/html/2203.14277)
 
-use std::{
-    collections::{HashMap, HashSet},
-    sync::LazyLock,
-};
-
-type CharMap<'a> = HashMap<&'a str, char>;
+type T = (&'static str, char);
 
 struct ScriptSpecials {
     om: char,
     halanta: char,
 }
 
-struct LangMap<'a> {
-    misc: CharMap<'a>,
-    numbers: CharMap<'a>,
-    vowels: CharMap<'a>,
-    vowel_signs: CharMap<'a>,
-    consonants: CharMap<'a>,
+struct LangMap {
+    misc: [T; 4],
+    numbers: [T; 10],
+    vowels: [T; 14],
+    vowel_signs: [T; 15],
+    consonants: [T; 34],
     specials: ScriptSpecials,
 }
 
-static UNICODE_MAP: LazyLock<CharMap> = LazyLock::new(|| {
-    CharMap::from([
-        ("a", 'ā'),
-        ("i", 'ī'),
-        ("u", 'ū'),
-        ("r", 'ṛ'),
-        ("ru", 'ṝ'),
-        ("l", 'ḷ'),
-        ("lu", 'ḹ'),
-        ("ll", 'ḻ'),
-        ("t", 'ṭ'),
-        ("d", 'ḍ'),
-        ("m", 'ṃ'),
-        ("h", 'ḥ'),
-        ("n", 'ñ'),
-        ("nu", 'ṅ'),
-        ("nl", 'ṇ'),
-        ("su", 'ś'),
-        ("sl", 'ṣ'),
-        ("au", 'ã'),
-        ("om", 'ॐ'),
-    ])
-});
+static UNICODE_MAP: [T; 19] = [
+    ("a", 'ā'),
+    ("i", 'ī'),
+    ("u", 'ū'),
+    ("r", 'ṛ'),
+    ("ru", 'ṝ'),
+    ("l", 'ḷ'),
+    ("lu", 'ḹ'),
+    ("ll", 'ḻ'),
+    ("t", 'ṭ'),
+    ("d", 'ḍ'),
+    ("m", 'ṃ'),
+    ("h", 'ḥ'),
+    ("n", 'ñ'),
+    ("nu", 'ṅ'),
+    ("nl", 'ṇ'),
+    ("su", 'ś'),
+    ("sl", 'ṣ'),
+    ("au", 'ã'),
+    ("om", 'ॐ'),
+];
 
-static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| LangMap {
-    misc: CharMap::from([(".", '।'), ("..", '॥'), ("'", 'ऽ'), ("ã", 'ँ')]),
-    numbers: CharMap::from([
+static CHAR_DICT: LangMap = LangMap {
+    misc: [(".", '।'), ("..", '॥'), ("'", 'ऽ'), ("ã", 'ँ')],
+    numbers: [
         ("0", '०'),
         ("1", '१'),
         ("2", '२'),
@@ -58,8 +51,8 @@ static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| LangMap {
         ("7", '७'),
         ("8", '८'),
         ("9", '९'),
-    ]),
-    vowels: CharMap::from([
+    ],
+    vowels: [
         ("a", 'अ'),
         ("ā", 'आ'),
         ("i", 'इ'),
@@ -74,8 +67,8 @@ static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| LangMap {
         ("ai", 'ऐ'),
         ("o", 'ओ'),
         ("au", 'औ'),
-    ]),
-    vowel_signs: CharMap::from([
+    ],
+    vowel_signs: [
         ("ā", 'ा'),
         ("i", 'ि'),
         ("ī", 'ी'),
@@ -91,8 +84,8 @@ static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| LangMap {
         ("au", 'ौ'),
         ("ṃ", 'ं'),
         ("ḥ", 'ः'),
-    ]),
-    consonants: CharMap::from([
+    ],
+    consonants: [
         ("k", 'क'),
         ("kh", 'ख'),
         ("g", 'ग'),
@@ -127,19 +120,14 @@ static CHAR_DICT: LazyLock<LangMap> = LazyLock::new(|| LangMap {
         ("s", 'स'),
         ("h", 'ह'),
         ("ḻ", 'ळ'),
-    ]),
+    ],
     specials: ScriptSpecials {
         om: 'ॐ',
         halanta: '्',
     },
-});
+};
 
-static UNASPIRATED_CONSONANTS: LazyLock<HashSet<char>> =
-    LazyLock::new(|| HashSet::from(['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ']));
-
-fn chars_to_string(data: &[char], start: usize, end: usize) -> String {
-    data[start..end].iter().collect::<String>()
-}
+static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
 
 fn handle_unicode(uast: String) -> Vec<char> {
     let str = uast.to_lowercase().chars().collect::<Vec<char>>();
@@ -172,14 +160,74 @@ fn handle_unicode(uast: String) -> Vec<char> {
             c.push(curr);
         }
 
-        if let Some(v) = UNICODE_MAP.get(c.as_str()) {
-            arr.push(*v);
+        if let Some(v) = UNICODE_MAP.iter().find(|i| i.0 == c) {
+            arr.push(v.1);
         }
 
         i += 1;
     }
 
     arr
+}
+
+fn get_vowel(c: &[char]) -> Option<String> {
+    if let Some(s) = CHAR_DICT
+        .vowels
+        .iter()
+        .find(|x| x.0 == c.iter().collect::<String>())
+    {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
+
+fn get_vowelsign(c: &[char]) -> Option<String> {
+    if let Some(s) = CHAR_DICT
+        .vowel_signs
+        .iter()
+        .find(|x| x.0 == c.iter().collect::<String>())
+    {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
+
+fn get_number(c: &[char]) -> Option<String> {
+    if let Some(s) = CHAR_DICT
+        .numbers
+        .iter()
+        .find(|x| x.0 == c.iter().collect::<String>())
+    {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
+
+fn get_misc(c: &[char]) -> Option<String> {
+    if let Some(s) = CHAR_DICT
+        .misc
+        .iter()
+        .find(|x| x.0 == c.iter().collect::<String>())
+    {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
+}
+
+fn get_consonant(c: &[char]) -> Option<String> {
+    if let Some(s) = CHAR_DICT
+        .consonants
+        .iter()
+        .find(|x| x.0 == c.iter().collect::<String>())
+    {
+        Some(s.1.to_string())
+    } else {
+        None
+    }
 }
 
 fn iast_to_devanāgarī(data: Vec<char>) -> String {
@@ -200,7 +248,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     // at end of word to represent a consonant without a corresponding vowel with it.
 
     // starts with vowel
-    if CHAR_DICT.vowels.contains_key(data[0].to_string().as_str()) {
+    if CHAR_DICT.vowels.iter().any(|c| c.0 == data[0].to_string()) {
         if i + 1 < data.len() && data[0] == 'a' && (data[1] == 'i' || data[1] == 'u') {
             i = 2;
         } else {
@@ -208,7 +256,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         // a valid vowel exists here
-        arr.push(CHAR_DICT.vowels[chars_to_string(&data, 0, i).as_str()].to_string());
+        arr.push(get_vowel(&data[0..i]).unwrap());
     }
 
     while i < data.len() {
@@ -219,9 +267,9 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         let c = data[i].to_string();
-        if let Some(v) = CHAR_DICT.misc.get(c.as_str()) {
+        if let Some(v) = get_misc(&data[i..i + 1]) {
             if i + 1 < data.len() && data[i] == '.' && data[i + 1] == '.' {
-                arr.push(CHAR_DICT.misc[".."].to_string());
+                arr.push('॥'.to_string());
                 i += 2;
             } else {
                 arr.push(v.to_string());
@@ -230,16 +278,16 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             continue;
         }
 
-        if let Some(v) = CHAR_DICT.numbers.get(c.as_str()) {
+        if let Some(v) = get_number(&data[i..i + 1]) {
             arr.push(v.to_string());
             i += 1;
             continue;
         }
 
         // at this point, if we find any illegal character then we simply ignore it
-        if !CHAR_DICT.vowel_signs.contains_key(&c.as_str())
-            && !CHAR_DICT.vowels.contains_key(&c.as_str())
-            && !CHAR_DICT.consonants.contains_key(&c.as_str())
+        if !CHAR_DICT.vowel_signs.iter().any(|i| i.0 == c)
+            && !CHAR_DICT.vowels.iter().any(|i| i.0 == c)
+            && !CHAR_DICT.consonants.iter().any(|i| i.0 == c)
         {
             i += 1;
             continue;
@@ -247,14 +295,11 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
 
         if i + 1 < data.len() && UNASPIRATED_CONSONANTS.contains(&data[i]) && data[i + 1] == 'h' {
             // a valid aspirated consonant exists here
-            arr.push(CHAR_DICT.consonants[chars_to_string(&data, i, i + 2).as_str()].to_string());
+            arr.push(get_consonant(&data[i..i + 2]).unwrap());
             i += 2;
         } else {
             // if valid consonant then push it else ignore invalid consonants completely
-            if let Some(v) = CHAR_DICT
-                .consonants
-                .get(chars_to_string(&data, i, i + 1).as_str())
-            {
+            if let Some(v) = get_consonant(&data[i..i + 1]) {
                 arr.push(v.to_string());
                 i += 1;
             }
@@ -264,7 +309,8 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         if i == data.len()
             || (!CHAR_DICT
                 .vowel_signs
-                .contains_key(data[i].to_string().as_str())
+                .iter()
+                .any(|c| c.0 == data[i].to_string())
                 && data[i] != 'a')
         {
             arr.push(CHAR_DICT.specials.halanta.to_string());
@@ -272,13 +318,11 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         if i + 1 < data.len() && data[i] == 'a' && (data[i + 1] == 'i' || data[i + 1] == 'u') {
-            arr.push(CHAR_DICT.vowel_signs[chars_to_string(&data, i, i + 2).as_str()].to_string());
+            arr.push(get_vowelsign(&data[i..i + 2]).unwrap());
             i += 2;
         } else {
             if data[i] != 'a' {
-                arr.push(
-                    CHAR_DICT.vowel_signs[chars_to_string(&data, i, i + 1).as_str()].to_string(),
-                );
+                arr.push(get_vowelsign(&data[i..i + 1]).unwrap());
             }
             i += 1;
         }
