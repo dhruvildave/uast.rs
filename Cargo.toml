@@ -1,12 +1,14 @@
 [package]
 name = "uast"
-version = "1.4.3"
+version = "1.4.4"
 edition = "2021"
-description = "UAST in Rust 🦀"
+description = "Unicode Aware Saṃskṛta Transliteration in Rust 🦀"
 license = "Apache-2.0"
 authors = ["Dhruvil Dave"]
 repository = "https://github.com/dhruvildave/uast.rs"
 readme = "README.md"
+include = ["src/"]
+homepage = "https://uast.dev"
 
 [profile.release]
 strip = true

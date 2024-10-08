@@ -1,14 +1,30 @@
 # UAST: Unicode Aware Saṃskṛta Transliteration
 
 > [!IMPORTANT]
-> This is a minimalist Rust implementation. Please prefer using the full implementation at https://uast.dev for
-> web-version or https://github.com/aneri0x4f/uast-cli for CLI version. If all that you are working with is
-> devanāgarī and/or IAST, go ahead!
+> For implementation in more than 10 scripts, visit https://uast.dev for
+> web-version or https://github.com/aneri0x4f/uast-cli for CLI version.
+> This Rust implementation does the following conversions:
+> - UAST-IO to देवनागरी
+> - IAST to देवनागरी
+> - देवनागरी to IAST
+> - देवनागरी to ગુજરાતી
 
-A tool for transliterating and typing Saṃskṛta in the easiest
-computer, language, and human-friendly way
+UAST - A tool for transliterating and typing Saṃskṛta in the easiest
+computer, language, and human-friendly way.
 
-To install this program, you will need to install [Rust](https://rust-lang.org)
+## Direct installation
+
+To directly install with Cargo,
+
+```bash
+cargo install -v uast
+```
+
+This is the preferred method as it handles everything for you.
+
+## Manual installation
+
+To install this program, you will need to install [Rust](https://rust-lang.org).
 
 After that, simply run:
 
