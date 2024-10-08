@@ -110,36 +110,34 @@ static CHAR_DICT: Script = Script {
     },
 };
 
-fn get_vowel(c: char) -> Option<String> {
-    CHAR_DICT
-        .vowels
-        .iter()
-        .find(|x| x.0 == c)
-        .and_then(|i| Some(i.1.to_string()))
-}
+impl Script {
+    fn get_vowel(&self, c: char) -> Option<String> {
+        self.vowels
+            .iter()
+            .find(|x| x.0 == c)
+            .and_then(|i| Some(i.1.to_string()))
+    }
 
-fn get_misc(c: char) -> Option<String> {
-    CHAR_DICT
-        .misc
-        .iter()
-        .find(|x| x.0 == c)
-        .and_then(|i| Some(i.1.to_string()))
-}
+    fn get_misc(&self, c: char) -> Option<String> {
+        self.misc
+            .iter()
+            .find(|x| x.0 == c)
+            .and_then(|i| Some(i.1.to_string()))
+    }
 
-fn get_vowelsign(c: char) -> Option<String> {
-    CHAR_DICT
-        .vowel_signs
-        .iter()
-        .find(|x| x.0 == c)
-        .and_then(|i| Some(i.1.to_string()))
-}
+    fn get_vowelsign(&self, c: char) -> Option<String> {
+        self.vowel_signs
+            .iter()
+            .find(|x| x.0 == c)
+            .and_then(|i| Some(i.1.to_string()))
+    }
 
-fn get_consonant(c: char) -> Option<String> {
-    CHAR_DICT
-        .consonants
-        .iter()
-        .find(|x| x.0 == c)
-        .and_then(|i| Some(i.1.to_string()))
+    fn get_consonant(&self, c: char) -> Option<String> {
+        self.consonants
+            .iter()
+            .find(|x| x.0 == c)
+            .and_then(|i| Some(i.1.to_string()))
+    }
 }
 
 pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
@@ -150,7 +148,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
     let mut i = 0;
 
     // if starts with vowel
-    if let Some(v) = get_vowel(str[i]) {
+    if let Some(v) = CHAR_DICT.get_vowel(str[i]) {
         arr.push(v);
         i += 1;
     }
@@ -162,7 +160,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
             continue;
         }
 
-        if let Some(v) = get_misc(str[i]) {
+        if let Some(v) = CHAR_DICT.get_misc(str[i]) {
             arr.push(v);
             i += 1;
             continue;
@@ -186,7 +184,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
             continue;
         }
 
-        if let Some(c) = get_consonant(str[i]) {
+        if let Some(c) = CHAR_DICT.get_consonant(str[i]) {
             arr.push(c);
 
             if i + 1 == str.len() {
@@ -201,7 +199,7 @@ pub(crate) fn devanāgarī_to_iast(dn: String) -> String {
                 continue;
             }
 
-            if let Some(s) = get_vowelsign(v) {
+            if let Some(s) = CHAR_DICT.get_vowelsign(v) {
                 arr.push(s);
                 i += 2;
                 continue;
