@@ -1,8 +1,6 @@
 //! देवनागरी to ગુજરાતી
 
-const N: usize = 79;
-
-static CHAR_DICT: [(char, char); N] = [
+static CHAR_DICT: [(char, char); 79] = [
     ('।', '।'),
     ('॥', '॥'),
     ('ॐ', 'ૐ'),

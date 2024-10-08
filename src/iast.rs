@@ -111,35 +111,35 @@ static CHAR_DICT: Script = Script {
 };
 
 fn get_vowel(c: char) -> Option<String> {
-    if let Some(s) = CHAR_DICT.vowels.iter().find(|x| x.0 == c) {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+    CHAR_DICT
+        .vowels
+        .iter()
+        .find(|x| x.0 == c)
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn get_misc(c: char) -> Option<String> {
-    if let Some(s) = CHAR_DICT.misc.iter().find(|x| x.0 == c) {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+    CHAR_DICT
+        .misc
+        .iter()
+        .find(|x| x.0 == c)
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn get_vowelsign(c: char) -> Option<String> {
-    if let Some(s) = CHAR_DICT.vowel_signs.iter().find(|x| x.0 == c) {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+    CHAR_DICT
+        .vowel_signs
+        .iter()
+        .find(|x| x.0 == c)
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn get_consonant(c: char) -> Option<String> {
-    if let Some(s) = CHAR_DICT.consonants.iter().find(|x| x.0 == c) {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+    CHAR_DICT
+        .consonants
+        .iter()
+        .find(|x| x.0 == c)
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 pub(crate) fn devanāgarī_to_iast(dn: String) -> String {

@@ -171,63 +171,43 @@ fn handle_unicode(uast: String) -> Vec<char> {
 }
 
 fn get_vowel(c: &[char]) -> Option<String> {
-    if let Some(s) = CHAR_DICT
+    CHAR_DICT
         .vowels
         .iter()
         .find(|x| x.0 == c.iter().collect::<String>())
-    {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn get_vowelsign(c: &[char]) -> Option<String> {
-    if let Some(s) = CHAR_DICT
+    CHAR_DICT
         .vowel_signs
         .iter()
         .find(|x| x.0 == c.iter().collect::<String>())
-    {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn get_number(c: &[char]) -> Option<String> {
-    if let Some(s) = CHAR_DICT
+    CHAR_DICT
         .numbers
         .iter()
         .find(|x| x.0 == c.iter().collect::<String>())
-    {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn get_misc(c: &[char]) -> Option<String> {
-    if let Some(s) = CHAR_DICT
+    CHAR_DICT
         .misc
         .iter()
         .find(|x| x.0 == c.iter().collect::<String>())
-    {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn get_consonant(c: &[char]) -> Option<String> {
-    if let Some(s) = CHAR_DICT
+    CHAR_DICT
         .consonants
         .iter()
         .find(|x| x.0 == c.iter().collect::<String>())
-    {
-        Some(s.1.to_string())
-    } else {
-        None
-    }
+        .and_then(|i| Some(i.1.to_string()))
 }
 
 fn iast_to_devanāgarī(data: Vec<char>) -> String {
