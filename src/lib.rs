@@ -10,7 +10,8 @@ mod gu;
 mod iast;
 mod tests;
 mod uast;
+mod utils;
 
-pub use gu::devanāgarī_to_gujarātī;
-pub use iast::devanāgarī_to_iast;
-pub use uast::process_uast;
+pub use crate::gu::devanāgarī_to_gujarātī;
+pub use crate::iast::devanāgarī_to_iast;
+pub use crate::uast::process_uast;

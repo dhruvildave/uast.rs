@@ -6,16 +6,12 @@ fn check<F>(s: &str, f: F) -> String
 where
     F: Fn(&String) -> String,
 {
-    s.to_string()
-        .split_whitespace()
-        .map(|x| f(&x.to_string()))
-        .collect::<Vec<String>>()
-        .join(" ")
+    f(&s.to_string())
 }
 
 #[test]
 fn test_process_uast() {
-    use crate::uast::process_uast;
+    use crate::process_uast;
 
     let arr = vec![
         ("ma/nu/gala/m/ bhagav/a/nvi/sl//nl/urma/nu/gala/m/ garu/d/adhvaja/h/. ma/nu/gala/m/ pu/nl//d/ar/i/k/a/k/sl/o ma/nu/gal/a/yatana/m/ hari/h/..0..", "मङ्गलं भगवान्विष्णुर्मङ्गलं गरुडध्वजः। मङ्गलं पुण्डरीकाक्षो मङ्गलायतनं हरिः॥०॥"),
@@ -34,7 +30,7 @@ fn test_process_uast() {
 
 #[test]
 fn test_devanāgarī_to_iast() {
-    use crate::iast::devanāgarī_to_iast;
+    use crate::devanāgarī_to_iast;
 
     let arr = vec![
         ("मङ्गलं भगवान्विष्णुर्मङ्गलं गरुडध्वजः। मङ्गलं पुण्डरीकाक्षो मङ्गलायतनं हरिः॥", "maṅgalaṃ bhagavānviṣṇurmaṅgalaṃ garuḍadhvajaḥ. maṅgalaṃ puṇḍarīkākṣo maṅgalāyatanaṃ hariḥ.."),
@@ -51,7 +47,7 @@ fn test_devanāgarī_to_iast() {
 
 #[test]
 fn test_devanāgarī_to_gujarātī() {
-    use crate::gu::devanāgarī_to_gujarātī;
+    use crate::devanāgarī_to_gujarātī;
 
     let arr = vec![
         ("मङ्गलं भगवान्विष्णुर्मङ्गलं गरुडध्वजः। मङ्गलं पुण्डरीकाक्षो मङ्गलायतनं हरिः॥", "મઙ્ગલં ભગવાન્વિષ્ણુર્મઙ્ગલં ગરુડધ્વજઃ। મઙ્ગલં પુણ્ડરીકાક્ષો મઙ્ગલાયતનં હરિઃ॥"),

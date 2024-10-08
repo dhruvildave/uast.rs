@@ -1,5 +1,7 @@
 //! देवनागरी to IAST
 
+use crate::utils::split_line_and_convert;
+
 type T = (char, &'static str);
 
 struct ScriptSpecials {
@@ -114,31 +116,31 @@ impl Script {
     fn get_vowel(&self, c: char) -> Option<String> {
         self.vowels
             .iter()
-            .find(|x| x.0 == c).map(|i| i.1.to_string())
+            .find(|x| x.0 == c)
+            .map(|i| i.1.to_string())
     }
 
     fn get_misc(&self, c: char) -> Option<String> {
-        self.misc
-            .iter()
-            .find(|x| x.0 == c).map(|i| i.1.to_string())
+        self.misc.iter().find(|x| x.0 == c).map(|i| i.1.to_string())
     }
 
     fn get_vowelsign(&self, c: char) -> Option<String> {
         self.vowel_signs
             .iter()
-            .find(|x| x.0 == c).map(|i| i.1.to_string())
+            .find(|x| x.0 == c)
+            .map(|i| i.1.to_string())
     }
 
     fn get_consonant(&self, c: char) -> Option<String> {
         self.consonants
             .iter()
-            .find(|x| x.0 == c).map(|i| i.1.to_string())
+            .find(|x| x.0 == c)
+            .map(|i| i.1.to_string())
     }
 }
 
-/// This function converts देवनागरी to IAST.
-pub fn devanāgarī_to_iast(dn: &String) -> String {
-    let str = dn.to_lowercase().chars().collect::<Vec<char>>();
+fn convertor(dn: &String) -> String {
+    let str = dn.trim().to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<String>::with_capacity(str.len());
 
@@ -218,4 +220,9 @@ pub fn devanāgarī_to_iast(dn: &String) -> String {
     }
 
     arr.join("")
+}
+
+/// This function converts देवनागरी to IAST.
+pub fn devanāgarī_to_iast(dn: &String) -> String {
+    split_line_and_convert(convertor, dn)
 }

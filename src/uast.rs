@@ -1,5 +1,7 @@
 //! This module implements the functionality of UAST-IO and IAST to देवनागरी
 
+use crate::utils::split_line_and_convert;
+
 type T = (&'static str, char);
 
 struct ScriptSpecials {
@@ -20,31 +22,36 @@ impl LangMap {
     fn get_vowel(&self, c: &[char]) -> Option<String> {
         self.vowels
             .iter()
-            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+            .find(|x| x.0 == c.iter().collect::<String>())
+            .map(|i| i.1.to_string())
     }
 
     fn get_vowelsign(&self, c: &[char]) -> Option<String> {
         self.vowel_signs
             .iter()
-            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+            .find(|x| x.0 == c.iter().collect::<String>())
+            .map(|i| i.1.to_string())
     }
 
     fn get_number(&self, c: &[char]) -> Option<String> {
         self.numbers
             .iter()
-            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+            .find(|x| x.0 == c.iter().collect::<String>())
+            .map(|i| i.1.to_string())
     }
 
     fn get_misc(&self, c: &[char]) -> Option<String> {
         self.misc
             .iter()
-            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+            .find(|x| x.0 == c.iter().collect::<String>())
+            .map(|i| i.1.to_string())
     }
 
     fn get_consonant(&self, c: &[char]) -> Option<String> {
         self.consonants
             .iter()
-            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+            .find(|x| x.0 == c.iter().collect::<String>())
+            .map(|i| i.1.to_string())
     }
 }
 
@@ -162,7 +169,7 @@ static CHAR_DICT: LangMap = LangMap {
 static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
 
 fn handle_unicode(uast: &String) -> Vec<char> {
-    let str = uast.to_lowercase().chars().collect::<Vec<char>>();
+    let str = uast.trim().to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<char>::new();
 
@@ -303,7 +310,11 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     arr.join("")
 }
 
+fn convertor(line: &String) -> String {
+    iast_to_devanāgarī(handle_unicode(line))
+}
+
 /// This function can accept both UAST-IO and IAST and returns देवनागरी.
 pub fn process_uast(line: &String) -> String {
-    iast_to_devanāgarī(handle_unicode(line))
+    split_line_and_convert(convertor, line)
 }

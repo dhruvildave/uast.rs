@@ -57,13 +57,7 @@ fn main() -> Result<(), Error> {
             }
 
             _ => {
-                println!(
-                    "{}",
-                    l.split_whitespace()
-                        .map(|x| f(&x.to_string()))
-                        .collect::<Vec<String>>()
-                        .join(" ")
-                );
+                println!("{}", f(&l));
             }
         };
     }

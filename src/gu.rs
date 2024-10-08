@@ -1,5 +1,7 @@
 //! देवनागरी to ગુજરાતી
 
+use crate::utils::split_line_and_convert;
+
 static CHAR_DICT: [(char, char); 79] = [
     ('।', '।'),
     ('॥', '॥'),
@@ -90,7 +92,15 @@ fn get_char(c: char) -> char {
     }
 }
 
+fn convertor(dn: &String) -> String {
+    dn.trim()
+        .chars()
+        .map(get_char)
+        .filter(|c| *c != '\0')
+        .collect()
+}
+
 /// This function converts देवनागरी to ગુજરાતી.
 pub fn devanāgarī_to_gujarātī(dn: &String) -> String {
-    dn.chars().map(get_char).filter(|c| *c != '\0').collect()
+    split_line_and_convert(convertor, dn)
 }
