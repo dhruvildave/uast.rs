@@ -90,6 +90,7 @@ fn get_char(c: char) -> char {
     }
 }
 
-pub(crate) fn devanāgarī_to_gujarātī(dn: String) -> String {
+/// This function converts देवनागरी to ગુજરાતી.
+pub fn devanāgarī_to_gujarātī(dn: &String) -> String {
     dn.chars().map(get_char).filter(|c| *c != '\0').collect()
 }

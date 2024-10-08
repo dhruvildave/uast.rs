@@ -1,4 +1,4 @@
-//! Rust implementation of [Unicode Aware Saṃskṛta Transliteration](https://arxiv.org/html/2203.14277)
+//! This module implements the functionality of UAST-IO and IAST to देवनागरी
 
 type T = (&'static str, char);
 
@@ -14,6 +14,38 @@ struct LangMap {
     vowel_signs: [T; 15],
     consonants: [T; 34],
     specials: ScriptSpecials,
+}
+
+impl LangMap {
+    fn get_vowel(&self, c: &[char]) -> Option<String> {
+        self.vowels
+            .iter()
+            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+    }
+
+    fn get_vowelsign(&self, c: &[char]) -> Option<String> {
+        self.vowel_signs
+            .iter()
+            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+    }
+
+    fn get_number(&self, c: &[char]) -> Option<String> {
+        self.numbers
+            .iter()
+            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+    }
+
+    fn get_misc(&self, c: &[char]) -> Option<String> {
+        self.misc
+            .iter()
+            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+    }
+
+    fn get_consonant(&self, c: &[char]) -> Option<String> {
+        self.consonants
+            .iter()
+            .find(|x| x.0 == c.iter().collect::<String>()).map(|i| i.1.to_string())
+    }
 }
 
 static UNICODE_MAP: [T; 19] = [
@@ -129,7 +161,7 @@ static CHAR_DICT: LangMap = LangMap {
 
 static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
 
-fn handle_unicode(uast: String) -> Vec<char> {
+fn handle_unicode(uast: &String) -> Vec<char> {
     let str = uast.to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<char>::new();
@@ -170,46 +202,6 @@ fn handle_unicode(uast: String) -> Vec<char> {
     arr
 }
 
-fn get_vowel(c: &[char]) -> Option<String> {
-    CHAR_DICT
-        .vowels
-        .iter()
-        .find(|x| x.0 == c.iter().collect::<String>())
-        .and_then(|i| Some(i.1.to_string()))
-}
-
-fn get_vowelsign(c: &[char]) -> Option<String> {
-    CHAR_DICT
-        .vowel_signs
-        .iter()
-        .find(|x| x.0 == c.iter().collect::<String>())
-        .and_then(|i| Some(i.1.to_string()))
-}
-
-fn get_number(c: &[char]) -> Option<String> {
-    CHAR_DICT
-        .numbers
-        .iter()
-        .find(|x| x.0 == c.iter().collect::<String>())
-        .and_then(|i| Some(i.1.to_string()))
-}
-
-fn get_misc(c: &[char]) -> Option<String> {
-    CHAR_DICT
-        .misc
-        .iter()
-        .find(|x| x.0 == c.iter().collect::<String>())
-        .and_then(|i| Some(i.1.to_string()))
-}
-
-fn get_consonant(c: &[char]) -> Option<String> {
-    CHAR_DICT
-        .consonants
-        .iter()
-        .find(|x| x.0 == c.iter().collect::<String>())
-        .and_then(|i| Some(i.1.to_string()))
-}
-
 fn iast_to_devanāgarī(data: Vec<char>) -> String {
     if data.is_empty() {
         return "".to_string();
@@ -236,7 +228,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         // a valid vowel exists here
-        arr.push(get_vowel(&data[0..i]).unwrap());
+        arr.push(CHAR_DICT.get_vowel(&data[0..i]).unwrap());
     }
 
     while i < data.len() {
@@ -247,7 +239,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         let c = data[i].to_string();
-        if let Some(v) = get_misc(&data[i..i + 1]) {
+        if let Some(v) = CHAR_DICT.get_misc(&data[i..i + 1]) {
             if i + 1 < data.len() && data[i] == '.' && data[i + 1] == '.' {
                 arr.push('॥'.to_string());
                 i += 2;
@@ -258,7 +250,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             continue;
         }
 
-        if let Some(v) = get_number(&data[i..i + 1]) {
+        if let Some(v) = CHAR_DICT.get_number(&data[i..i + 1]) {
             arr.push(v.to_string());
             i += 1;
             continue;
@@ -275,11 +267,11 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
 
         if i + 1 < data.len() && UNASPIRATED_CONSONANTS.contains(&data[i]) && data[i + 1] == 'h' {
             // a valid aspirated consonant exists here
-            arr.push(get_consonant(&data[i..i + 2]).unwrap());
+            arr.push(CHAR_DICT.get_consonant(&data[i..i + 2]).unwrap());
             i += 2;
         } else {
             // if valid consonant then push it else ignore invalid consonants completely
-            if let Some(v) = get_consonant(&data[i..i + 1]) {
+            if let Some(v) = CHAR_DICT.get_consonant(&data[i..i + 1]) {
                 arr.push(v.to_string());
                 i += 1;
             }
@@ -298,11 +290,11 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         if i + 1 < data.len() && data[i] == 'a' && (data[i + 1] == 'i' || data[i + 1] == 'u') {
-            arr.push(get_vowelsign(&data[i..i + 2]).unwrap());
+            arr.push(CHAR_DICT.get_vowelsign(&data[i..i + 2]).unwrap());
             i += 2;
         } else {
             if data[i] != 'a' {
-                arr.push(get_vowelsign(&data[i..i + 1]).unwrap());
+                arr.push(CHAR_DICT.get_vowelsign(&data[i..i + 1]).unwrap());
             }
             i += 1;
         }
@@ -311,6 +303,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     arr.join("")
 }
 
-pub(crate) fn process_uast(line: String) -> String {
+/// This function can accept both UAST-IO and IAST and returns देवनागरी.
+pub fn process_uast(line: &String) -> String {
     iast_to_devanāgarī(handle_unicode(line))
 }

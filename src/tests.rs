@@ -4,11 +4,11 @@
 
 fn check<F>(s: &str, f: F) -> String
 where
-    F: Fn(String) -> String,
+    F: Fn(&String) -> String,
 {
     s.to_string()
         .split_whitespace()
-        .map(|x| f(x.to_string()))
+        .map(|x| f(&x.to_string()))
         .collect::<Vec<String>>()
         .join(" ")
 }

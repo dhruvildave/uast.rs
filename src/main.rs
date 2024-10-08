@@ -3,11 +3,7 @@
 use std::env::consts::{ARCH, OS};
 use std::io::{Error, ErrorKind};
 use std::{env, io};
-
-mod gu;
-mod iast;
-mod tests;
-mod uast;
+use uast::{devanāgarī_to_gujarātī, devanāgarī_to_iast, process_uast};
 
 fn main() -> Result<(), Error> {
     let mut args = env::args();
@@ -19,12 +15,12 @@ fn main() -> Result<(), Error> {
     }
 
     let f = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
-        "d" => uast::process_uast,
-        "i" => iast::devanāgarī_to_iast,
-        "g" => gu::devanāgarī_to_gujarātī,
+        "d" => process_uast,
+        "i" => devanāgarī_to_iast,
+        "g" => devanāgarī_to_gujarātī,
         "-v" => {
             #[cfg(debug_assertions)]
-            const BUILD_TYPE: &'static str = "debug";
+            const BUILD_TYPE: &str = "debug";
             #[cfg(not(debug_assertions))]
             const BUILD_TYPE: &'static str = "release";
 
@@ -64,7 +60,7 @@ fn main() -> Result<(), Error> {
                 println!(
                     "{}",
                     l.split_whitespace()
-                        .map(|x| f(x.to_string()))
+                        .map(|x| f(&x.to_string()))
                         .collect::<Vec<String>>()
                         .join(" ")
                 );
