@@ -22,7 +22,7 @@ fn main() -> Result<(), Error> {
             #[cfg(debug_assertions)]
             const BUILD_TYPE: &str = "debug";
             #[cfg(not(debug_assertions))]
-            const BUILD_TYPE: &'static str = "release";
+            const BUILD_TYPE: &str = "release";
 
             println!(
                 "{} {} ({BUILD_TYPE} build, {OS} [{ARCH}])",
@@ -30,7 +30,9 @@ fn main() -> Result<(), Error> {
                 env!("CARGO_PKG_VERSION")
             );
             println!("For web version, visit `https://uast.dev`");
-            println!("For citations, visit `https://arxiv.org/abs/2203.14277`");
+            println!(
+                "For citations, visit Unicode Aware Saṃskṛta Transliteration [Dalwadi and Dave, 2022: `https://arxiv.org/html/2203.14277`]"
+            );
 
             return Ok(());
         }
