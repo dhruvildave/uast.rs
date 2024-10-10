@@ -35,7 +35,7 @@ fn main() -> Result<(), Error> {
             );
             println!("For web version, visit `https://uast.dev`");
             println!(
-                "For citations, visit Unicode Aware Saṃskṛta Transliteration [Dalwadi and Dave, 2022: `https://arxiv.org/html/2203.14277`]"
+                "For citations, visit Unicode Aware Saṃskṛta Transliteration [`https://arxiv.org/html/2203.14277`]"
             );
 
             return Ok(());
