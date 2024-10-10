@@ -24,5 +24,4 @@ FROM scratch AS final
 COPY --from=build /bin/uast /bin/
 
 # What the container should run when it is started.
-CMD ["/bin/uast"]
 ENTRYPOINT ["/bin/uast"]

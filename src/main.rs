@@ -1,8 +1,12 @@
 //! Driver-code
 
-use std::env::consts::{ARCH, OS};
-use std::io::{Error, ErrorKind};
-use std::{env, io};
+use std::{
+    env::{
+        self,
+        consts::{ARCH, OS},
+    },
+    io::{self, Error, ErrorKind},
+};
 use uast::{devanāgarī_to_gujarātī, devanāgarī_to_iast, process_uast};
 
 fn main() -> Result<(), Error> {
