@@ -105,13 +105,11 @@ fn convertor(dn: &String) -> String {
 /// ```
 /// use uast::devanāgarī_to_gujarātī;
 ///
-/// fn main() {
-///     let s = "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥".to_string();
-///     assert_eq!(
-///         "ૐ ભૂર્ભુવઃ સ્વઃ તત્સવિતુર્વરેણ્યં ભર્ગો દેવસ્ય ધીમહિ। ધિયો યો નઃ પ્રચોદયાત્॥".to_string(),
-///         devanāgarī_to_gujarātī(&s)
-///     );
-/// }
+/// let s = "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥".to_string();
+/// assert_eq!(
+///     "ૐ ભૂર્ભુવઃ સ્વઃ તત્સવિતુર્વરેણ્યં ભર્ગો દેવસ્ય ધીમહિ। ધિયો યો નઃ પ્રચોદયાત્॥".to_string(),
+///     devanāgarī_to_gujarātī(&s)
+/// );
 /// ```
 pub fn devanāgarī_to_gujarātī(dn: &String) -> String {
     split_line_and_convert(convertor, dn)

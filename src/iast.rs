@@ -227,14 +227,12 @@ fn convertor(dn: &String) -> String {
 /// ```
 /// use uast::devanāgarī_to_iast;
 ///
-/// fn main() {
-///     let s = "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥".to_string();
-///     assert_eq!(
-///         "ॐ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt.."
-///             .to_string(),
-///         devanāgarī_to_iast(&s)
-///     );
-/// }
+/// let s = "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥".to_string();
+/// assert_eq!(
+///     "ॐ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt.."
+///         .to_string(),
+///     devanāgarī_to_iast(&s)
+/// );
 /// ```
 pub fn devanāgarī_to_iast(dn: &String) -> String {
     split_line_and_convert(convertor, dn)
