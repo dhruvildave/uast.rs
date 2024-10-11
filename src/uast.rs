@@ -315,6 +315,15 @@ fn convertor(line: &String) -> String {
 }
 
 /// This function can accept both UAST-IO and IAST and returns देवनागरी.
+///
+/// ```
+/// use uast::process_uast;
+///
+/// fn main() {
+///     let s = "/om/ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt..".to_string();
+///     assert_eq!("ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥".to_string(), process_uast(&s));
+/// }
+/// ```
 pub fn process_uast(line: &String) -> String {
     split_line_and_convert(convertor, line)
 }
