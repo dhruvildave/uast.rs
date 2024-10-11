@@ -8,6 +8,7 @@
 
 mod gu;
 mod iast;
+#[cfg(test)]
 mod tests;
 mod uast;
 mod utils;

@@ -1,8 +1,5 @@
 //! Tests
 
-#[cfg(test)]
-use crate::utils::split_line_and_convert;
-
 #[test]
 fn test_process_uast() {
     use crate::process_uast;
@@ -18,7 +15,7 @@ fn test_process_uast() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(split_line_and_convert(process_uast, &k.to_string()), v);
+        assert_eq!(process_uast(&k.to_string()), v);
     }
 }
 
@@ -35,10 +32,7 @@ fn test_devanāgarī_to_iast() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(
-            split_line_and_convert(devanāgarī_to_iast, &k.to_string()),
-            v
-        );
+        assert_eq!(devanāgarī_to_iast(&k.to_string()), v);
     }
 }
 
@@ -54,9 +48,6 @@ fn test_devanāgarī_to_gujarātī() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(
-            split_line_and_convert(devanāgarī_to_gujarātī, &k.to_string()),
-            v
-        );
+        assert_eq!(devanāgarī_to_gujarātī(&k.to_string()), v);
     }
 }
