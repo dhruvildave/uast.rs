@@ -140,7 +140,7 @@ impl Script {
 }
 
 fn convertor(dn: &String) -> String {
-    let str = dn.trim().to_lowercase().chars().collect::<Vec<char>>();
+    let str = dn.to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<String>::with_capacity(str.len());
 

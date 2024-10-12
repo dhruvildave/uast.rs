@@ -93,11 +93,7 @@ fn get_char(c: char) -> char {
 }
 
 fn convertor(dn: &String) -> String {
-    dn.trim()
-        .chars()
-        .map(get_char)
-        .filter(|c| *c != '\0')
-        .collect()
+    dn.chars().map(get_char).filter(|c| *c != '\0').collect()
 }
 
 /// This function converts देवनागरी to ગુજરાતી.

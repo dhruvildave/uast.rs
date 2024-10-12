@@ -169,7 +169,7 @@ static CHAR_DICT: LangMap = LangMap {
 static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
 
 fn handle_unicode(uast: &String) -> Vec<char> {
-    let str = uast.trim().to_lowercase().chars().collect::<Vec<char>>();
+    let str = uast.to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<char>::new();
 
