@@ -5,10 +5,9 @@
 > web-version or https://github.com/aneri0x4f/uast-cli for CLI version. This
 > Rust implementation does the following conversions:
 >
-> - UAST-IO to देवनागरी
-> - IAST to देवनागरी
-> - देवनागरी to IAST
-> - देवनागरी to ગુજરાતી
+> - [d]: UAST-IO/IAST to देवनागरी
+> - [i]: देवनागरी to IAST
+> - [g]: देवनागरी to ગુજરાતી
 
 UAST - A tool for transliterating and typing Saṃskṛta in the easiest computer,
 language, and human-friendly way.
