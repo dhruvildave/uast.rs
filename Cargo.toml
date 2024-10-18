@@ -1,7 +1,8 @@
 [package]
 name = "uast"
-version = "3.0.9"
+version = "3.0.10"
 edition = "2021"
+rust-version = "1.59.0"
 description = "Unicode Aware Saṃskṛta Transliteration in Rust 🦀"
 license = "Apache-2.0"
 authors = ["Dhruvil Dave"]
