@@ -2,7 +2,7 @@
 
 #[test]
 fn test_process_uast() {
-    use crate::process_uast;
+    use crate::uast_to_devanāgarī;
 
     let arr = vec![
         ("ma/nu/gala/m/ bhagav/a/nvi/sl//nl/urma/nu/gala/m/ garu/d/adhvaja/h/. ma/nu/gala/m/ pu/nl//d/ar/i/k/a/k/sl/o ma/nu/gal/a/yatana/m/ hari/h/..0..", "मङ्गलं भगवान्विष्णुर्मङ्गलं गरुडध्वजः। मङ्गलं पुण्डरीकाक्षो मङ्गलायतनं हरिः॥०॥"),
@@ -15,7 +15,7 @@ fn test_process_uast() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(process_uast(&k.to_string()), v);
+        assert_eq!(uast_to_devanāgarī(&k.to_string()), v);
     }
 }
 

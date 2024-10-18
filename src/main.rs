@@ -7,7 +7,7 @@ use std::{
     },
     io::{self, Error, ErrorKind},
 };
-use uast::{devanāgarī_to_gujarātī, devanāgarī_to_iast, process_uast};
+use uast::{devanāgarī_to_gujarātī, devanāgarī_to_iast, uast_to_devanāgarī};
 
 fn main() -> Result<(), Error> {
     let mut args = env::args();
@@ -19,7 +19,7 @@ fn main() -> Result<(), Error> {
     }
 
     let f = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
-        "d" => process_uast,
+        "d" => uast_to_devanāgarī,
         "i" => devanāgarī_to_iast,
         "g" => devanāgarī_to_gujarātī,
         "-v" => {

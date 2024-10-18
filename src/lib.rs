@@ -15,4 +15,4 @@ mod utils;
 
 pub use crate::gu::devanāgarī_to_gujarātī;
 pub use crate::iast::devanāgarī_to_iast;
-pub use crate::uast::process_uast;
+pub use crate::uast::uast_to_devanāgarī;
