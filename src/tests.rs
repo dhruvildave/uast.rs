@@ -15,7 +15,7 @@ fn test_process_uast() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(uast_to_devanāgarī(&k.to_string()), v);
+        assert_eq!(uast_to_devanāgarī(k), v);
     }
 }
 
@@ -32,7 +32,7 @@ fn test_devanāgarī_to_iast() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(devanāgarī_to_iast(&k.to_string()), v);
+        assert_eq!(devanāgarī_to_iast(k), v);
     }
 }
 
@@ -48,6 +48,6 @@ fn test_devanāgarī_to_gujarātī() {
     ];
 
     for (k, v) in arr {
-        assert_eq!(devanāgarī_to_gujarātī(&k.to_string()), v);
+        assert_eq!(devanāgarī_to_gujarātī(k), v);
     }
 }

@@ -92,7 +92,7 @@ fn get_char(c: char) -> char {
     }
 }
 
-fn convertor(dn: &String) -> String {
+fn convertor(dn: &str) -> String {
     dn.chars().map(get_char).filter(|c| *c != '\0').collect()
 }
 
@@ -107,6 +107,6 @@ fn convertor(dn: &String) -> String {
 ///     devanāgarī_to_gujarātī(&s)
 /// );
 /// ```
-pub fn devanāgarī_to_gujarātī(dn: &String) -> String {
+pub fn devanāgarī_to_gujarātī(dn: &str) -> String {
     split_line_and_convert(convertor, dn)
 }

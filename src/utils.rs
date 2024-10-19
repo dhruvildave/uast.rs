@@ -1,12 +1,8 @@
 //! Utility function for splitting line and converting
 
-pub(crate) fn split_line_and_convert<F>(f: F, s: &String) -> String
+pub(crate) fn split_line_and_convert<F>(f: F, s: &str) -> String
 where
-    F: Fn(&String) -> String,
+    F: Fn(&str) -> String,
 {
-    s.trim()
-        .split_whitespace()
-        .map(|i| f(&i.to_string()))
-        .collect::<Vec<_>>()
-        .join(" ")
+    s.split_whitespace().map(f).collect::<Vec<_>>().join(" ")
 }

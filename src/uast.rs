@@ -168,7 +168,7 @@ static CHAR_DICT: LangMap = LangMap {
 
 static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
 
-fn handle_unicode(uast: &String) -> Vec<char> {
+fn handle_unicode(uast: &str) -> Vec<char> {
     let str = uast.to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<char>::new();
@@ -310,7 +310,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     arr.join("")
 }
 
-fn convertor(line: &String) -> String {
+fn convertor(line: &str) -> String {
     iast_to_devanāgarī(handle_unicode(line))
 }
 
@@ -327,6 +327,6 @@ fn convertor(line: &String) -> String {
 ///     uast_to_devanāgarī(&s)
 /// );
 /// ```
-pub fn uast_to_devanāgarī(line: &String) -> String {
+pub fn uast_to_devanāgarī(line: &str) -> String {
     split_line_and_convert(convertor, line)
 }

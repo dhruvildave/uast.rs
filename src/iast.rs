@@ -139,7 +139,7 @@ impl Script {
     }
 }
 
-fn convertor(dn: &String) -> String {
+fn convertor(dn: &str) -> String {
     let str = dn.to_lowercase().chars().collect::<Vec<char>>();
 
     let mut arr = Vec::<String>::with_capacity(str.len());
@@ -234,6 +234,6 @@ fn convertor(dn: &String) -> String {
 ///     devanāgarī_to_iast(&s)
 /// );
 /// ```
-pub fn devanāgarī_to_iast(dn: &String) -> String {
+pub fn devanāgarī_to_iast(dn: &str) -> String {
     split_line_and_convert(convertor, dn)
 }
