@@ -1,7 +1,7 @@
 //! Tests
 
 #[test]
-fn test_process_uast() {
+fn test_uast_to_devanāgarī() {
     use crate::uast_to_devanāgarī;
 
     let arr = vec![

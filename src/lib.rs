@@ -4,7 +4,9 @@
 //! - देवनागरी: <https://www.unicode.org/charts/PDF/U0900.pdf>
 //! - ગુજરાતી: <https://www.unicode.org/charts/PDF/U0A80.pdf>
 //!
-//! __Warning__: No Unicode normalization is performed. It is assumed that the text is already normalized.
+//! <div class="warning">
+//! No Unicode normalization is performed. It is assumed that the text is already normalized.
+//! </div>
 
 mod gu;
 mod iast;
