@@ -9,7 +9,7 @@ use std::{
 };
 use uast::{devanāgarī_to_gujarātī, devanāgarī_to_iast, uast_to_devanāgarī};
 
-fn main() -> Result<(), Error> {
+fn main() -> io::Result<()> {
     let mut args = env::args();
     if args.len() > 2 {
         return Err(Error::new(
