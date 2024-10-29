@@ -171,7 +171,7 @@ static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 
 fn handle_unicode(uast: &str) -> Vec<char> {
     let str = uast.to_lowercase().chars().collect::<Vec<char>>();
 
-    let mut arr = Vec::<char>::new();
+    let mut arr = Vec::<char>::with_capacity(str.len());
 
     let mut i = 0;
     while i < str.len() {
