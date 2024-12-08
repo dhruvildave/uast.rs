@@ -3,10 +3,7 @@
   "image": "mcr.microsoft.com/devcontainers/rust",
   "customizations": {
     "vscode": {
-      "extensions": [
-        "rust-lang.rust-analyzer",
-        "ms-vscode.makefile-tools"
-      ]
+      "extensions": ["rust-lang.rust-analyzer", "ms-vscode.makefile-tools"]
     }
   },
   "features": {
