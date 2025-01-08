@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "UAST: Unicode Aware Sanskrit Transliteration"
+title: "UAST: Unicode Aware Saṃskṛta Transliteration"
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -20,7 +20,9 @@ identifiers:
     value: "https://arxiv.org/abs/2203.14277"
 repository-code: "https://github.com/dhruvildave/uast"
 url: "https://uast.dev"
-repository: "https://github.com/aneri0x4f/uast-cli"
+repository:
+    - "https://github.com/aneri0x4f/uast-cli"
+    - "https://github.com/dhruvildave/uast.rs"
 keywords:
   - Human-Computer Interaction (cs.HC)
   - "FOS: Computer and information sciences, H.5.2"

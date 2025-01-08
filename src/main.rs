@@ -7,14 +7,14 @@ use std::{
     },
     io::{self, Error, ErrorKind},
 };
-use uast::{devanāgarī_to_gujarātī, devanāgarī_to_iast, uast_to_devanāgarī};
+use uast::*;
 
 fn main() -> io::Result<()> {
     let mut args = env::args();
     if args.len() > 2 {
         return Err(Error::new(
             ErrorKind::InvalidInput,
-            "Invalid number of arguments. Usage: uast [d|i|h|g]",
+            "Invalid number of arguments. Usage: uast [d|i|h|g|s]",
         ));
     }
 
@@ -22,6 +22,8 @@ fn main() -> io::Result<()> {
         "d" => uast_to_devanāgarī,
         "i" => devanāgarī_to_iast,
         "g" => devanāgarī_to_gujarātī,
+        "s" => slp_to_iast,
+
         "-v" => {
             #[cfg(debug_assertions)]
             const BUILD_TYPE: &str = "debug";
@@ -46,7 +48,7 @@ fn main() -> io::Result<()> {
             return Ok(());
         }
         _ => {
-            return Err(Error::new(ErrorKind::InvalidInput, "Usage: uast [d|i|g]"));
+            return Err(Error::new(ErrorKind::InvalidInput, "Usage: uast [d|i|g|s]"));
         }
     };
 

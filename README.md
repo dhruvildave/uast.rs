@@ -8,6 +8,7 @@
 > - [d]: UAST-IO/IAST to देवनागरी
 > - [i]: देवनागरी to IAST
 > - [g]: देवनागरी to ગુજરાતી
+> - [s]: SLP1 to IAST
 
 UAST - A tool for transliterating and typing Saṃskṛta in the easiest computer,
 language, and human-friendly way.
@@ -52,7 +53,7 @@ If you use this repository, please cite the following paper:
   url = {https://arxiv.org/abs/2203.14277},
   author = {Dalwadi, Aneri and Dave, Dhruvil},
   keywords = {Human-Computer Interaction (cs.HC), FOS: Computer and information sciences, H.5.2},
-  title = {UAST: Unicode Aware Sanskrit Transliteration},
+  title = {UAST: Unicode Aware Saṃskṛta Transliteration},
   publisher = {arXiv},
   year = {2022},
   copyright = {Creative Commons Attribution 4.0 International}

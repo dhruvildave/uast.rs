@@ -51,3 +51,19 @@ fn test_devanāgarī_to_gujarātī() {
         assert_eq!(devanāgarī_to_gujarātī(k), v);
     }
 }
+
+#[test]
+fn test_slp_to_iast() {
+    use crate::slp_to_iast;
+
+    let arr = vec![
+        ("maNgalaM BagavAnvizRurmaNgalaM garuqaDvajaH. maNgalaM puRqarIkAkzo maNgalAyatanaM hariH..", "maṅgalaṃ bhagavānviṣṇurmaṅgalaṃ garuḍadhvajaḥ. maṅgalaṃ puṇḍarīkākṣo maṅgalāyatanaṃ hariḥ.."),
+        ("om BUrBuvaH svaH tatsaviturvareRyaM Bargo devasya DImahi. Diyo yo naH pracodayAt..", "om bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt.."),
+        ("agnimILe purohitaM yajYasya devamftvijam. hotAraM ratnaDAtamam.. agniH pUrveBirfziBirIqyo nUtanErUta. sa devA~ eha vakzati.. agninA rayimaSnavatpozameva divedive. yaSasaM vIravattamam.. agne yaM yajYamaDvaraM viSvataH pariBUrasi. sa iddevezu gacCati.. agnirhotA kavikratuH satyaScitraSravastamaH. devo deveBirA gamat.. yadaNga dASuze tvamagne BadraM karizyasi. tavettatsatyamaNgiraH.. upa tvAgne divedive dozAvastarDiyA vayam. namo Baranta emasi.. rAjantamaDvarARAM gopAmftasya dIdivim. varDamAnaM sve dame.. sa naH piteva sUnave'gne sUpAyano Bava. sacasvA naH svastaye..", "agnimīḻe purohitaṃ yajñasya devamṛtvijam. hotāraṃ ratnadhātamam.. agniḥ pūrvebhirṛṣibhirīḍyo nūtanairūta. sa devāã eha vakṣati.. agninā rayimaśnavatpoṣameva divedive. yaśasaṃ vīravattamam.. agne yaṃ yajñamadhvaraṃ viśvataḥ paribhūrasi. sa iddeveṣu gacchati.. agnirhotā kavikratuḥ satyaścitraśravastamaḥ. devo devebhirā gamat.. yadaṅga dāśuṣe tvamagne bhadraṃ kariṣyasi. tavettatsatyamaṅgiraḥ.. upa tvāgne divedive doṣāvastardhiyā vayam. namo bharanta emasi.. rājantamadhvarāṇāṃ gopāmṛtasya dīdivim. vardhamānaṃ sve dame.. sa naḥ piteva sūnave'gne sūpāyano bhava. sacasvā naḥ svastaye.."),
+        ("મઙ્ગલં", ""),
+    ];
+
+    for (k, v) in arr {
+        assert_eq!(slp_to_iast(k), v);
+    }
+}
