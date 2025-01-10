@@ -1,16 +1,21 @@
 [package]
 name = "uast"
-version = "4.0.6"
+version = "4.1.0"
 edition = "2021"
-rust-version = "1.74.0"
+rust-version = "1.84.0"
 description = "Unicode Aware Saṃskṛta Transliteration in Rust 🦀"
 license = "Apache-2.0"
 authors = ["Dhruvil Dave"]
 repository = "https://github.com/dhruvildave/uast.rs"
-readme = "README.md"
 include = ["src/"]
 homepage = "https://uast.dev"
-categories = ["text-processing", "command-line-utilities", "parser-implementations", "encoding"]
+categories = [
+    "text-processing",
+    "command-line-utilities",
+    "parser-implementations",
+    "encoding",
+]
+resolver = "3"
 
 [profile.release]
 strip = true
