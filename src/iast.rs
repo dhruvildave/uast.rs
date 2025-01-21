@@ -128,6 +128,14 @@ impl Script {
     fn get_consonant(&self, c: char) -> Option<String> {
         binary_search(&self.consonants, c, |i| i.to_string())
     }
+
+    fn contains_consonant(&self, c: char) -> bool {
+        binary_search(&self.consonants, c, |i| i).is_some()
+    }
+
+    fn contains_misc(&self, c: char) -> bool {
+        binary_search(&self.misc, c, |i| i).is_some()
+    }
 }
 
 fn convertor(dn: &str) -> String {
@@ -195,8 +203,8 @@ fn convertor(dn: &str) -> String {
                 continue;
             }
 
-            if CHAR_DICT.consonants.iter().any(|c| c.0 == v)
-                || CHAR_DICT.misc.iter().any(|c| c.0 == v)
+            if CHAR_DICT.contains_consonant(v)
+                || CHAR_DICT.contains_misc(v)
                 || v == CHAR_DICT.specials.anusvāra
                 || v == CHAR_DICT.specials.visarga
                 || v == CHAR_DICT.specials.candrabindu

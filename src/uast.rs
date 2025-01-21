@@ -10,10 +10,10 @@ struct ScriptSpecials {
 }
 
 struct LangMap {
-    misc: [T; 4],
+    misc: [T; 6],
     numbers: [T; 10],
     vowels: [T; 14],
-    vowel_signs: [T; 15],
+    vowel_signs: [T; 13],
     consonants: [T; 34],
     specials: ScriptSpecials,
 }
@@ -145,7 +145,14 @@ fn unicode_map_binary_search(c: &str) -> Option<char> {
 }
 
 static CHAR_DICT: LangMap = LangMap {
-    misc: [("'", 'ऽ'), (".", '।'), ("..", '॥'), ("ã", 'ँ')],
+    misc: [
+        ("'", 'ऽ'),
+        (".", '।'),
+        ("..", '॥'),
+        ("ã", 'ँ'),
+        ("ḥ", 'ः'),
+        ("ṃ", 'ं'),
+    ],
     numbers: [
         ("0", '०'),
         ("1", '१'),
@@ -184,10 +191,8 @@ static CHAR_DICT: LangMap = LangMap {
         ("ā", 'ा'),
         ("ī", 'ी'),
         ("ū", 'ू'),
-        ("ḥ", 'ः'),
         ("ḷ", 'ॢ'),
         ("ḹ", 'ॣ'),
-        ("ṃ", 'ं'),
         ("ṛ", 'ृ'),
         ("ṝ", 'ॄ'),
     ],
