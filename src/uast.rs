@@ -19,66 +19,133 @@ struct LangMap {
 }
 
 impl LangMap {
+    fn binary_search(arr: &[T], c: &[char]) -> Option<String> {
+        let mut i = 0_isize;
+        let mut j = (arr.len() - 1) as isize;
+
+        while i <= j {
+            let m = (i + j) / 2;
+
+            let v = arr[m as usize];
+            let txt = c.iter().collect::<String>();
+
+            if txt == v.0 {
+                return Some(v.1.to_string());
+            }
+
+            if txt > v.0.parse().unwrap() {
+                i = m + 1;
+            } else {
+                j = m - 1;
+            }
+        }
+
+        None
+    }
+
     fn get_vowel(&self, c: &[char]) -> Option<String> {
-        self.vowels
-            .iter()
-            .find(|x| x.0 == c.iter().collect::<String>())
-            .map(|i| i.1.to_string())
+        Self::binary_search(&self.vowels, c)
     }
 
     fn get_vowelsign(&self, c: &[char]) -> Option<String> {
-        self.vowel_signs
-            .iter()
-            .find(|x| x.0 == c.iter().collect::<String>())
-            .map(|i| i.1.to_string())
+        Self::binary_search(&self.vowel_signs, c)
     }
 
     fn get_number(&self, c: &[char]) -> Option<String> {
-        self.numbers
-            .iter()
-            .find(|x| x.0 == c.iter().collect::<String>())
-            .map(|i| i.1.to_string())
+        Self::binary_search(&self.numbers, c)
     }
 
     fn get_misc(&self, c: &[char]) -> Option<String> {
-        self.misc
-            .iter()
-            .find(|x| x.0 == c.iter().collect::<String>())
-            .map(|i| i.1.to_string())
+        Self::binary_search(&self.misc, c)
     }
 
     fn get_consonant(&self, c: &[char]) -> Option<String> {
-        self.consonants
-            .iter()
-            .find(|x| x.0 == c.iter().collect::<String>())
-            .map(|i| i.1.to_string())
+        Self::binary_search(&self.consonants, c)
+    }
+
+    fn contains(arr: &[T], c: &str) -> bool {
+        let mut i = 0_isize;
+        let mut j = (arr.len() - 1) as isize;
+
+        while i <= j {
+            let m = (i + j) / 2;
+
+            let v = arr[m as usize];
+
+            if c == v.0 {
+                return true;
+            }
+
+            if c > v.0 {
+                i = m + 1;
+            } else {
+                j = m - 1;
+            }
+        }
+
+        false
+    }
+
+    fn contains_vowel(&self, c: &str) -> bool {
+        Self::contains(&self.vowels, c)
+    }
+
+    fn contains_vowelsign(&self, c: &str) -> bool {
+        Self::contains(&self.vowel_signs, c)
+    }
+
+    fn contains_consonant(&self, c: &str) -> bool {
+        Self::contains(&self.consonants, c)
     }
 }
 
 static UNICODE_MAP: [T; 19] = [
     ("a", 'ā'),
+    ("au", 'ã'),
+    ("d", 'ḍ'),
+    ("h", 'ḥ'),
     ("i", 'ī'),
-    ("u", 'ū'),
+    ("l", 'ḷ'),
+    ("ll", 'ḻ'),
+    ("lu", 'ḹ'),
+    ("m", 'ṃ'),
+    ("n", 'ñ'),
+    ("nl", 'ṇ'),
+    ("nu", 'ṅ'),
+    ("om", 'ॐ'),
     ("r", 'ṛ'),
     ("ru", 'ṝ'),
-    ("l", 'ḷ'),
-    ("lu", 'ḹ'),
-    ("ll", 'ḻ'),
-    ("t", 'ṭ'),
-    ("d", 'ḍ'),
-    ("m", 'ṃ'),
-    ("h", 'ḥ'),
-    ("n", 'ñ'),
-    ("nu", 'ṅ'),
-    ("nl", 'ṇ'),
-    ("su", 'ś'),
     ("sl", 'ṣ'),
-    ("au", 'ã'),
-    ("om", 'ॐ'),
+    ("su", 'ś'),
+    ("t", 'ṭ'),
+    ("u", 'ū'),
 ];
 
+fn unicode_map_binary_search(c: &str) -> Option<char> {
+    let mut i = 0_isize;
+    let mut j = (UNICODE_MAP.len() - 1) as isize;
+
+    while i <= j {
+        let m = (i + j) / 2;
+
+        let v = UNICODE_MAP[m as usize];
+
+        if c == v.0 {
+            return Some(v.1);
+        }
+
+        if c > v.0 {
+            i = m + 1;
+        } else {
+            j = m - 1;
+        }
+    }
+
+    None
+}
+
 static CHAR_DICT: LangMap = LangMap {
-    misc: [(".", '।'), ("..", '॥'), ("'", 'ऽ'), ("ã", 'ँ')],
+    misc: [("'", 'ऽ'), (".", '।'), ("..", '॥'), ("ã", 'ँ')],
     numbers: [
         ("0", '०'),
         ("1", '१'),
@@ -93,72 +160,72 @@ static CHAR_DICT: LangMap = LangMap {
     ],
     vowels: [
         ("a", 'अ'),
-        ("ā", 'आ'),
+        ("ai", 'ऐ'),
+        ("au", 'औ'),
+        ("e", 'ए'),
         ("i", 'इ'),
-        ("ī", 'ई'),
+        ("o", 'ओ'),
         ("u", 'उ'),
+        ("ā", 'आ'),
+        ("ī", 'ई'),
         ("ū", 'ऊ'),
-        ("ṛ", 'ऋ'),
-        ("ṝ", 'ॠ'),
         ("ḷ", 'ऌ'),
         ("ḹ", 'ॡ'),
-        ("e", 'ए'),
-        ("ai", 'ऐ'),
-        ("o", 'ओ'),
-        ("au", 'औ'),
+        ("ṛ", 'ऋ'),
+        ("ṝ", 'ॠ'),
     ],
     vowel_signs: [
-        ("ā", 'ा'),
+        ("ai", 'ै'),
+        ("au", 'ौ'),
+        ("e", 'े'),
         ("i", 'ि'),
-        ("ī", 'ी'),
+        ("o", 'ो'),
         ("u", 'ु'),
+        ("ā", 'ा'),
+        ("ī", 'ी'),
         ("ū", 'ू'),
-        ("ṛ", 'ृ'),
-        ("ṝ", 'ॄ'),
+        ("ḥ", 'ः'),
         ("ḷ", 'ॢ'),
         ("ḹ", 'ॣ'),
-        ("e", 'े'),
-        ("ai", 'ै'),
-        ("o", 'ो'),
-        ("au", 'ौ'),
         ("ṃ", 'ं'),
-        ("ḥ", 'ः'),
+        ("ṛ", 'ृ'),
+        ("ṝ", 'ॄ'),
     ],
     consonants: [
-        ("k", 'क'),
-        ("kh", 'ख'),
-        ("g", 'ग'),
-        ("gh", 'घ'),
-        ("ṅ", 'ङ'),
+        ("b", 'ब'),
+        ("bh", 'भ'),
         ("c", 'च'),
         ("ch", 'छ'),
-        ("j", 'ज'),
-        ("jh", 'झ'),
-        ("ñ", 'ञ'),
-        ("ṭ", 'ट'),
-        ("ṭh", 'ठ'),
-        ("ḍ", 'ड'),
-        ("ḍh", 'ढ'),
-        ("ṇ", 'ण'),
-        ("t", 'त'),
-        ("th", 'थ'),
         ("d", 'द'),
         ("dh", 'ध'),
+        ("g", 'ग'),
+        ("gh", 'घ'),
+        ("h", 'ह'),
+        ("j", 'ज'),
+        ("jh", 'झ'),
+        ("k", 'क'),
+        ("kh", 'ख'),
+        ("l", 'ल'),
+        ("m", 'म'),
         ("n", 'न'),
         ("p", 'प'),
         ("ph", 'फ'),
-        ("b", 'ब'),
-        ("bh", 'भ'),
-        ("m", 'म'),
-        ("y", 'य'),
         ("r", 'र'),
-        ("l", 'ल'),
-        ("v", 'व'),
-        ("ś", 'श'),
-        ("ṣ", 'ष'),
         ("s", 'स'),
-        ("h", 'ह'),
+        ("t", 'त'),
+        ("th", 'थ'),
+        ("v", 'व'),
+        ("y", 'य'),
+        ("ñ", 'ञ'),
+        ("ś", 'श'),
+        ("ḍ", 'ड'),
+        ("ḍh", 'ढ'),
         ("ḻ", 'ळ'),
+        ("ṅ", 'ङ'),
+        ("ṇ", 'ण'),
+        ("ṣ", 'ष'),
+        ("ṭ", 'ट'),
+        ("ṭh", 'ठ'),
     ],
     specials: ScriptSpecials {
         om: 'ॐ',
@@ -167,6 +234,29 @@ static CHAR_DICT: LangMap = LangMap {
 };
 
 static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
+
+fn unaspirated_consonants_contains(c: char) -> bool {
+    let mut i = 0_isize;
+    let mut j = (UNASPIRATED_CONSONANTS.len() - 1) as isize;
+
+    while i <= j {
+        let m = (i + j) / 2;
+
+        let v = UNASPIRATED_CONSONANTS[m as usize];
+
+        if c == v {
+            return true;
+        }
+
+        if c > v {
+            i = m + 1;
+        } else {
+            j = m - 1;
+        }
+    }
+
+    false
+}
 
 fn handle_unicode(uast: &str) -> Vec<char> {
     let str = uast.to_lowercase().chars().collect::<Vec<char>>();
@@ -199,8 +289,8 @@ fn handle_unicode(uast: &str) -> Vec<char> {
             c.push(curr);
         }
 
-        if let Some(v) = UNICODE_MAP.iter().find(|i| i.0 == c) {
-            arr.push(v.1);
+        if let Some(v) = unicode_map_binary_search(&c) {
+            arr.push(v);
         }
 
         i += 1;
@@ -227,7 +317,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     // at end of word to represent a consonant without a corresponding vowel with it.
 
     // starts with vowel
-    if CHAR_DICT.vowels.iter().any(|c| c.0 == data[0].to_string()) {
+    if LangMap::contains_vowel(&CHAR_DICT, data[0].to_string().as_str()) {
         if i + 1 < data.len() && data[0] == 'a' && (data[1] == 'i' || data[1] == 'u') {
             i = 2;
         } else {
@@ -264,15 +354,15 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         // at this point, if we find any illegal character then we simply ignore it
-        if !CHAR_DICT.vowel_signs.iter().any(|i| i.0 == c)
-            && !CHAR_DICT.vowels.iter().any(|i| i.0 == c)
-            && !CHAR_DICT.consonants.iter().any(|i| i.0 == c)
+        if !LangMap::contains_vowelsign(&CHAR_DICT, c.as_str())
+            && !LangMap::contains_vowel(&CHAR_DICT, c.as_str())
+            && !LangMap::contains_consonant(&CHAR_DICT, c.as_str())
         {
             i += 1;
             continue;
         }
 
-        if i + 1 < data.len() && UNASPIRATED_CONSONANTS.contains(&data[i]) && data[i + 1] == 'h' {
+        if i + 1 < data.len() && unaspirated_consonants_contains(data[i]) && data[i + 1] == 'h' {
             // a valid aspirated consonant exists here
             arr.push(CHAR_DICT.get_consonant(&data[i..i + 2]).unwrap());
             i += 2;
@@ -286,10 +376,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
 
         // if end of word or anything other than a vowel-sign then we just push a halanta and start the process again
         if i == data.len()
-            || (!CHAR_DICT
-                .vowel_signs
-                .iter()
-                .any(|c| c.0 == data[i].to_string())
+            || (!LangMap::contains_vowelsign(&CHAR_DICT, data[i].to_string().as_str())
                 && data[i] != 'a')
         {
             arr.push(CHAR_DICT.specials.halanta.to_string());

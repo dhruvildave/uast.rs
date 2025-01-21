@@ -1,27 +1,10 @@
 //! SLP1 to IAST
 
-use crate::utils::split_line_and_convert;
+use crate::utils::{binary_search, split_line_and_convert};
 
 static CHAR_DICT: [(char, &str); 63] = [
-    ('a', "a"),
-    ('A', "ā"),
-    ('i', "i"),
-    ('I', "ī"),
-    ('u', "u"),
-    ('U', "ū"),
-    ('f', "ṛ"),
-    ('F', "ṝ"),
-    ('x', "ḷ"),
-    ('X', "ḹ"),
-    ('e', "e"),
-    ('E', "ai"),
-    ('o', "o"),
-    ('O', "au"),
-    ('M', "ṃ"),
-    ('H', "ḥ"),
-    ('~', "ã"),
-    ('.', "."),
     ('\'', "'"),
+    ('.', "."),
     ('0', "0"),
     ('1', "1"),
     ('2', "2"),
@@ -32,52 +15,65 @@ static CHAR_DICT: [(char, &str); 63] = [
     ('7', "7"),
     ('8', "8"),
     ('9', "9"),
-    ('k', "k"),
-    ('K', "kh"),
-    ('g', "g"),
-    ('G', "gh"),
-    ('N', "ṅ"),
-    ('c', "c"),
+    ('A', "ā"),
+    ('B', "bh"),
     ('C', "ch"),
-    ('j', "j"),
+    ('D', "dh"),
+    ('E', "ai"),
+    ('F', "ṝ"),
+    ('G', "gh"),
+    ('H', "ḥ"),
+    ('I', "ī"),
     ('J', "jh"),
-    ('Y', "ñ"),
-    ('w', "ṭ"),
-    ('W', "ṭh"),
-    ('q', "ḍ"),
+    ('K', "kh"),
+    ('L', "ḻ"),
+    ('M', "ṃ"),
+    ('N', "ṅ"),
+    ('O', "au"),
+    ('P', "ph"),
     ('Q', "ḍh"),
     ('R', "ṇ"),
-    ('t', "t"),
-    ('T', "th"),
-    ('d', "d"),
-    ('D', "dh"),
-    ('n', "n"),
-    ('p', "p"),
-    ('P', "ph"),
-    ('b', "b"),
-    ('B', "bh"),
-    ('m', "m"),
-    ('y', "y"),
-    ('r', "r"),
-    ('l', "l"),
-    ('v', "v"),
     ('S', "ś"),
-    ('z', "ṣ"),
-    ('s', "s"),
+    ('T', "th"),
+    ('U', "ū"),
+    ('W', "ṭh"),
+    ('X', "ḹ"),
+    ('Y', "ñ"),
+    ('a', "a"),
+    ('b', "b"),
+    ('c', "c"),
+    ('d', "d"),
+    ('e', "e"),
+    ('f', "ṛ"),
+    ('g', "g"),
     ('h', "h"),
-    ('L', "ḻ"),
+    ('i', "i"),
+    ('j', "j"),
+    ('k', "k"),
+    ('l', "l"),
+    ('m', "m"),
+    ('n', "n"),
+    ('o', "o"),
+    ('p', "p"),
+    ('q', "ḍ"),
+    ('r', "r"),
+    ('s', "s"),
+    ('t', "t"),
+    ('u', "u"),
+    ('v', "v"),
+    ('w', "ṭ"),
+    ('x', "ḷ"),
+    ('y', "y"),
+    ('z', "ṣ"),
+    ('~', "ã"),
 ];
 
-fn get_char(c: char) -> &'static str {
-    if let Some(v) = CHAR_DICT.iter().find(|x| x.0 == c) {
-        v.1
-    } else {
-        ""
-    }
+fn get_char(c: char) -> Option<&'static str> {
+    binary_search(&CHAR_DICT, c, |i| i)
 }
 
 fn convertor(dn: &str) -> String {
-    dn.chars().map(get_char).collect()
+    dn.chars().filter_map(get_char).collect()
 }
 
 /// This function converts SLP to IAST

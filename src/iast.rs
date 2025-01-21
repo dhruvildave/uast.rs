@@ -1,6 +1,6 @@
 //! देवनागरी to IAST
 
-use crate::utils::split_line_and_convert;
+use crate::utils::{binary_search, split_line_and_convert};
 
 type T = (char, &'static str);
 
@@ -29,13 +29,13 @@ static CHAR_DICT: Script = Script {
         ('उ', "u"),
         ('ऊ', "ū"),
         ('ऋ', "ṛ"),
-        ('ॠ', "ṝ"),
         ('ऌ', "ḷ"),
-        ('ॡ', "ḹ"),
         ('ए', "e"),
         ('ऐ', "ai"),
         ('ओ', "o"),
         ('औ', "au"),
+        ('ॠ', "ṝ"),
+        ('ॡ', "ḹ"),
     ],
     vowel_signs: [
         ('ा', "ā"),
@@ -45,12 +45,12 @@ static CHAR_DICT: Script = Script {
         ('ू', "ū"),
         ('ृ', "ṛ"),
         ('ॄ', "ṝ"),
-        ('ॢ', "ḷ"),
-        ('ॣ', "ḹ"),
         ('े', "e"),
         ('ै', "ai"),
         ('ो', "o"),
         ('ौ', "au"),
+        ('ॢ', "ḷ"),
+        ('ॣ', "ḹ"),
     ],
     consonants: [
         ('क', "k"),
@@ -81,12 +81,12 @@ static CHAR_DICT: Script = Script {
         ('य', "y"),
         ('र', "r"),
         ('ल', "l"),
+        ('ळ', "ḻ"),
         ('व', "v"),
         ('श', "ś"),
         ('ष', "ṣ"),
         ('स', "s"),
         ('ह', "h"),
-        ('ळ', "ḻ"),
     ],
     misc: [
         ('ऽ', "'"),
@@ -114,28 +114,19 @@ static CHAR_DICT: Script = Script {
 
 impl Script {
     fn get_vowel(&self, c: char) -> Option<String> {
-        self.vowels
-            .iter()
-            .find(|x| x.0 == c)
-            .map(|i| i.1.to_string())
+        binary_search(&self.vowels, c, |i| i.to_string())
     }
 
     fn get_misc(&self, c: char) -> Option<String> {
-        self.misc.iter().find(|x| x.0 == c).map(|i| i.1.to_string())
+        binary_search(&self.misc, c, |i| i.to_string())
     }
 
     fn get_vowelsign(&self, c: char) -> Option<String> {
-        self.vowel_signs
-            .iter()
-            .find(|x| x.0 == c)
-            .map(|i| i.1.to_string())
+        binary_search(&self.vowel_signs, c, |i| i.to_string())
     }
 
     fn get_consonant(&self, c: char) -> Option<String> {
-        self.consonants
-            .iter()
-            .find(|x| x.0 == c)
-            .map(|i| i.1.to_string())
+        binary_search(&self.consonants, c, |i| i.to_string())
     }
 }
 
