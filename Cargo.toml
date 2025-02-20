@@ -1,8 +1,8 @@
 [package]
 name = "uast"
-version = "5.0.0"
-edition = "2021"
-rust-version = "1.84.0"
+version = "6.0.0"
+edition = "2024"
+rust-version = "1.85.0"
 description = "Unicode Aware Saṃskṛta Transliteration in Rust 🦀"
 license = "Apache-2.0"
 authors = ["Dhruvil Dave"]
@@ -15,7 +15,6 @@ categories = [
     "parser-implementations",
     "encoding",
 ]
-resolver = "3"
 
 [profile.release]
 strip = true
