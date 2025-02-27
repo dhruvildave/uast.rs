@@ -22,12 +22,12 @@ impl LangMap {
     fn binary_search(arr: &[T], c: &[char]) -> Option<String> {
         let mut i = 0_isize;
         let mut j = (arr.len() - 1) as isize;
+        let txt = c.iter().collect::<String>();
 
         while i <= j {
             let m = (i + j) / 2;
 
             let v = arr[m as usize];
-            let txt = c.iter().collect::<String>();
 
             if txt == v.0 {
                 return Some(v.1.to_string());
