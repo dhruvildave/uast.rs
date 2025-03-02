@@ -412,10 +412,9 @@ fn convertor(line: &str) -> String {
 /// use uast::uast_to_devanāgarī;
 ///
 /// let s =
-///     "/om/ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt.."
-///         .to_string();
+///     "/om/ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt..";
 /// assert_eq!(
-///     "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥".to_string(),
+///     "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥",
 ///     uast_to_devanāgarī(&s)
 /// );
 /// ```

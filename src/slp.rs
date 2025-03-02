@@ -81,9 +81,9 @@ fn convertor(dn: &str) -> String {
 /// ```
 /// use uast::slp_to_iast;
 ///
-/// let s = "om BUrBuvaH svaH tatsaviturvareRyaM Bargo devasya DImahi. Diyo yo naH pracodayAt..".to_string();
+/// let s = "om BUrBuvaH svaH tatsaviturvareRyaM Bargo devasya DImahi. Diyo yo naH pracodayAt..";
 /// assert_eq!(
-///     "om bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt..".to_string(),
+///     "om bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt..",
 ///     slp_to_iast(&s)
 /// );
 /// ```

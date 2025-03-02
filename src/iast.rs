@@ -226,10 +226,9 @@ fn convertor(dn: &str) -> String {
 /// ```
 /// use uast::devanāgarī_to_iast;
 ///
-/// let s = "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥".to_string();
+/// let s = "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥";
 /// assert_eq!(
-///     "ॐ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt.."
-///         .to_string(),
+///     "ॐ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt..",
 ///     devanāgarī_to_iast(&s)
 /// );
 /// ```
