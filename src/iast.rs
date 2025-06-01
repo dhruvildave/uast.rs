@@ -10,13 +10,14 @@ struct ScriptSpecials {
     visarga: char,
     anusvāra: char,
     candrabindu: char,
+    saṃkṣipta: char,
 }
 
 struct Script {
     vowels: [T; 14],
     vowel_signs: [T; 13],
     consonants: [T; 34],
-    misc: [T; 13],
+    misc: [T; 14],
     specials: ScriptSpecials,
 }
 
@@ -102,6 +103,7 @@ static CHAR_DICT: Script = Script {
         ('७', "7"),
         ('८', "8"),
         ('९', "9"),
+        ('ॱ', "-"),
     ],
     specials: ScriptSpecials {
         om: 'ॐ',
@@ -109,6 +111,7 @@ static CHAR_DICT: Script = Script {
         visarga: 'ः',
         candrabindu: 'ँ',
         halanta: '्',
+        saṃkṣipta: '॰',
     },
 };
 
@@ -152,7 +155,7 @@ fn convertor(dn: &str) -> String {
     }
 
     while i < str.len() {
-        if str[i] == CHAR_DICT.specials.om {
+        if str[i] == CHAR_DICT.specials.om || str[i] == CHAR_DICT.specials.saṃkṣipta {
             arr.push(str[i].to_string());
             i += 1;
             continue;
