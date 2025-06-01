@@ -7,10 +7,11 @@ type T = (&'static str, char);
 struct ScriptSpecials {
     om: char,
     halanta: char,
+    saṃkṣipta: char,
 }
 
 struct LangMap {
-    misc: [T; 6],
+    misc: [T; 7],
     numbers: [T; 10],
     vowels: [T; 14],
     vowel_signs: [T; 13],
@@ -99,7 +100,8 @@ impl LangMap {
     }
 }
 
-static UNICODE_MAP: [T; 19] = [
+static UNICODE_MAP: [T; 20] = [
+    (".", '॰'),
     ("a", 'ā'),
     ("au", 'ã'),
     ("d", 'ḍ'),
@@ -147,6 +149,7 @@ fn unicode_map_binary_search(c: &str) -> Option<char> {
 static CHAR_DICT: LangMap = LangMap {
     misc: [
         ("'", 'ऽ'),
+        ("-", 'ॱ'),
         (".", '।'),
         ("..", '॥'),
         ("ã", 'ँ'),
@@ -235,6 +238,7 @@ static CHAR_DICT: LangMap = LangMap {
     specials: ScriptSpecials {
         om: 'ॐ',
         halanta: '्',
+        saṃkṣipta: '॰',
     },
 };
 
@@ -336,6 +340,12 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     while i < data.len() {
         if data[i] == CHAR_DICT.specials.om {
             arr.push(CHAR_DICT.specials.om.to_string());
+            i += 1;
+            continue;
+        }
+
+        if data[i] == CHAR_DICT.specials.saṃkṣipta {
+            arr.push(CHAR_DICT.specials.saṃkṣipta.to_string());
             i += 1;
             continue;
         }
