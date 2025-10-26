@@ -2,7 +2,7 @@
 
 use crate::utils::{binary_search, split_line_and_convert};
 
-static CHAR_DICT: [(char, char); 79] = [
+static CHAR_DICT: [(char, char); 80] = [
     ('ँ', 'ઁ'),
     ('ं', 'ં'),
     ('ः', 'ઃ'),
@@ -82,6 +82,7 @@ static CHAR_DICT: [(char, char); 79] = [
     ('७', '૭'),
     ('८', '૮'),
     ('९', '૯'),
+    ('॰', '૰'),
 ];
 
 fn get_char(c: char) -> Option<char> {
