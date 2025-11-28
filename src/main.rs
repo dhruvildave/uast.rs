@@ -18,7 +18,7 @@ fn main() -> io::Result<()> {
         ));
     }
 
-    let f = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
+    let f: fn(&str) -> String = match args.nth(1).unwrap_or_else(|| "d".to_string()).as_str() {
         "d" => uast_to_devanāgarī,
         "i" => devanāgarī_to_iast,
         "g" => devanāgarī_to_gujarātī,
@@ -43,7 +43,7 @@ fn main() -> io::Result<()> {
             return Ok(());
         }
         "-h" => {
-            println!("Usage: uast [d|i|g]");
+            println!("Usage: uast [d|i|g|s]");
 
             return Ok(());
         }

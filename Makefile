@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-.PHONY: all format clean test docker install cover
+.PHONY: all format clean test docker podman install cover
 
 all:
 	cargo b -v -r
@@ -12,6 +12,9 @@ clean:
 
 docker:
 	docker build --pull -f Containerfile -t uast . && docker system prune -f
+
+podman:
+	podman build --pull -f Containerfile -t uast . && podman system prune -f
 
 install:
 	cargo install -v --path .
