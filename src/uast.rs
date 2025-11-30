@@ -100,10 +100,26 @@ impl LangMap {
     }
 }
 
-static UNICODE_MAP: [T; 20] = [
+static VEDA_ACCENTS: [char; 14] = ['॑', '॒', '᳚', '꣠', '꣡', '꣢', '꣣', '꣤', '꣥', '꣦', '꣧', '꣨', '꣩', 'ꣳ'];
+
+static UNICODE_MAP: [T; 34] = [
+    ("'", '॑'),
+    ("''", '᳚'),
+    ("-", '॒'),
     (".", '॰'),
+    ("0", '꣠'),
+    ("1", '꣡'),
+    ("2", '꣢'),
+    ("3", '꣣'),
+    ("4", '꣤'),
+    ("5", '꣥'),
+    ("6", '꣦'),
+    ("7", '꣧'),
+    ("8", '꣨'),
+    ("9", '꣩'),
     ("a", 'ā'),
     ("au", 'ã'),
+    ("cv", 'ꣳ'),
     ("d", 'ḍ'),
     ("h", 'ḥ'),
     ("i", 'ī'),
@@ -244,14 +260,14 @@ static CHAR_DICT: LangMap = LangMap {
 
 static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
 
-fn unaspirated_consonants_contains(c: char) -> bool {
+fn char_slice_contains(slice: &[char], c: char) -> bool {
     let mut i = 0_isize;
-    let mut j = (UNASPIRATED_CONSONANTS.len() - 1) as isize;
+    let mut j = (slice.len() - 1) as isize;
 
     while i <= j {
         let m = (i + j) / 2;
 
-        let v = UNASPIRATED_CONSONANTS[m as usize];
+        let v = slice[m as usize];
 
         if c == v {
             return true;
@@ -338,6 +354,12 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     }
 
     while i < data.len() {
+        if char_slice_contains(&VEDA_ACCENTS, data[i]) {
+            arr.push(data[i].to_string());
+            i += 1;
+            continue;
+        }
+
         if data[i] == CHAR_DICT.specials.om {
             arr.push(CHAR_DICT.specials.om.to_string());
             i += 1;
@@ -377,7 +399,10 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             continue;
         }
 
-        if i + 1 < data.len() && unaspirated_consonants_contains(data[i]) && data[i + 1] == 'h' {
+        if i + 1 < data.len()
+            && char_slice_contains(&UNASPIRATED_CONSONANTS, data[i])
+            && data[i + 1] == 'h'
+        {
             // a valid aspirated consonant exists here
             arr.push(CHAR_DICT.get_consonant(&data[i..i + 2]).unwrap());
             i += 2;

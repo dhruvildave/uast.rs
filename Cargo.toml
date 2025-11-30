@@ -1,6 +1,6 @@
 [package]
 name = "uast"
-version = "6.0.7"
+version = "7.0.0"
 edition = "2024"
 rust-version = "1.85.1"
 description = "Unicode Aware Saṃskṛta Transliteration in Rust 🦀"

@@ -10,8 +10,8 @@ fn test_uast_to_devanāgarī() {
             "मङ्गलं भगवान्विष्णुर्मङ्गलं गरुडध्वजः। मङ्गलं पुण्डरीकाक्षो मङ्गलायतनं हरिः॥ग॰ पु॰ २।४७।४८॥",
         ),
         (
-            "/om/ bhūrbhuvaḥ svaḥ tatsaviturvareṇyaṃ bhargo devasya dhīmahi. dhiyo yo naḥ pracodayāt..",
-            "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि। धियो यो नः प्रचोदयात्॥",
+            "/om/ bhūrbhuvaḥ svaḥ tatsa/'/vi/-/turvareṇyaṃ bhargo/'/ de/-/vasya/'/ dhīmahi. dhiyo/-/ yo naḥ/'/ praco/-/dayā/'/t..",
+            "ॐ भूर्भुवः स्वः तत्स॑वि॒तुर्वरेण्यं भर्गो॑ दे॒वस्य॑ धीमहि। धियो॒ यो नः॑ प्रचो॒दया॑त्॥",
         ),
         (
             "agnimīḻe purohitaṃ yajñasya devamṛtvijam. hotāraṃ ratnadhātamam.. agniḥ pūrvebhirṛṣibhirīḍyo nūtanairūta. sa devāã eha vakṣati.. agninā rayimaśnavatpoṣameva divedive. yaśasaṃ vīravattamam.. agne yaṃ yajñamadhvaraṃ viśvataḥ paribhūrasi. sa iddeveṣu gacchati.. agnirhotā kavikratuḥ satyaścitraśravastamaḥ. devo devebhirā gamat.. yadaṅga dāśuṣe tvamagne bhadraṃ kariṣyasi. tavettatsatyamaṅgiraḥ.. upa tvāgne divedive doṣāvastardhiyā vayam. namo bharanta emasi.. rājantamadhvarāṇāṃ gopāmṛtasya dīdivim. vardhamānaṃ sve dame.. sa naḥ piteva sūnave'gne sūpāyano bhava. sacasvā naḥ svastaye..",
