@@ -24,7 +24,7 @@ fn main() -> io::Result<()> {
         "g" => devanāgarī_to_gujarātī,
         "s" => slp_to_iast,
 
-        "-v" => {
+        "-v" | "--version" => {
             #[cfg(debug_assertions)]
             const BUILD_TYPE: &str = "debug";
             #[cfg(not(debug_assertions))]
@@ -42,7 +42,7 @@ fn main() -> io::Result<()> {
 
             return Ok(());
         }
-        "-h" => {
+        "-h" | "--help" => {
             println!("Usage: uast [d|i|g|s]");
 
             return Ok(());
