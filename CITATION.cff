@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/citation-file-format/citation-file-format/refs/heads/main/schema.json
 cff-version: 1.2.0
 title: "UAST: Unicode Aware Saṃskṛta Transliteration"
 message: >-
@@ -21,8 +22,9 @@ identifiers:
 repository-code: "https://github.com/dhruvildave/uast"
 url: "https://uast.dev"
 repository:
-    - "https://github.com/aneri0x4f/uast-cli"
-    - "https://github.com/dhruvildave/uast.rs"
+  - "https://github.com/dhruvildave/uast.rs"
+  - "https://github.com/aneri0x4f/uast-cli"
+  - "https://github.com/dhruvildave/uast"
 keywords:
   - Human-Computer Interaction (cs.HC)
   - "FOS: Computer and information sciences, H.5.2"
