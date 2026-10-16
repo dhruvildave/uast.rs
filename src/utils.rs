@@ -4,15 +4,13 @@ pub(crate) fn split_line_and_convert<F>(f: F, s: &str) -> String
 where
     F: Fn(&str) -> String,
 {
-    let mut res = String::new();
-    let mut first = true;
+    let mut res = String::with_capacity(s.len());
 
-    for word in s.split_whitespace() {
-        if !first {
+    for (i, word) in s.split_whitespace().enumerate() {
+        if i > 0 {
             res.push(' ');
         }
         res.push_str(&f(word));
-        first = false;
     }
     res
 }
@@ -22,34 +20,6 @@ where
     U: Copy,
     F: Fn(U) -> V,
 {
-    if arr.is_empty() {
-        return None;
-    }
-
-    let mut i = 0;
-    let mut j = arr.len() - 1;
-    let p = arr.as_ptr();
-
-    while i <= j {
-        let m = i + (j - i) / 2;
-        let v = unsafe { *p.add(m) };
-
-        if c == v.0 {
-            return Some(f(v.1));
-        }
-
-        if c > v.0 {
-            i = match m.checked_add(1) {
-                Some(val) => val,
-                None => return None,
-            };
-        } else {
-            j = match m.checked_sub(1) {
-                Some(val) => val,
-                None => return None,
-            };
-        }
-    }
-
-    None
+    let i = arr.binary_search_by_key(&c, |&(key, _)| key).ok()?;
+    Some(f(arr[i].1))
 }
