@@ -2,11 +2,11 @@ name: Cargo Build & Test
 
 permissions:
   contents: read
-  pull-requests: write
 
 on:
   push:
-  pull_request:
+    branches:
+      - main
 
 env:
   CARGO_TERM_COLOR: always
