@@ -21,27 +21,9 @@ struct LangMap {
 
 impl LangMap {
     fn binary_search(arr: &[T], c: &[char]) -> Option<String> {
-        let mut i = 0_isize;
-        let mut j = (arr.len() - 1) as isize;
-        let txt = c.iter().collect::<String>();
-
-        while i <= j {
-            let m = (i + j) / 2;
-
-            let v = arr[m as usize];
-
-            if txt == v.0 {
-                return Some(v.1.to_string());
-            }
-
-            if txt > v.0.parse().unwrap() {
-                i = m + 1;
-            } else {
-                j = m - 1;
-            }
-        }
-
-        None
+        arr.binary_search_by(|v| v.0.chars().cmp(c.iter().copied()))
+            .ok()
+            .map(|i| arr[i].1.to_string())
     }
 
     fn get_vowel(&self, c: &[char]) -> Option<String> {
@@ -65,26 +47,7 @@ impl LangMap {
     }
 
     fn contains(arr: &[T], c: &str) -> bool {
-        let mut i = 0_isize;
-        let mut j = (arr.len() - 1) as isize;
-
-        while i <= j {
-            let m = (i + j) / 2;
-
-            let v = arr[m as usize];
-
-            if c == v.0 {
-                return true;
-            }
-
-            if c > v.0 {
-                i = m + 1;
-            } else {
-                j = m - 1;
-            }
-        }
-
-        false
+        arr.binary_search_by(|v| v.0.cmp(&c)).is_ok()
     }
 
     fn contains_vowel(&self, c: &str) -> bool {
