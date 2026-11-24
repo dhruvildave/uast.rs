@@ -107,3 +107,15 @@ fn convertor(dn: &str) -> String {
 pub fn devanāgarī_to_gujarātī(dn: &str) -> String {
     split_line_and_convert(convertor, dn)
 }
+
+#[cfg(test)]
+mod invariants {
+    use super::*;
+    use crate::utils::keys_strictly_increasing;
+
+    #[test]
+    fn table_is_strictly_sorted() {
+        // `utils::binary_search` needs the table sorted by its char key.
+        assert!(keys_strictly_increasing(&CHAR_DICT));
+    }
+}

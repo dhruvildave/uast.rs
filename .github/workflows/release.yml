@@ -9,7 +9,21 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  # Runs the tests for the exact released commit, without the OIDC permission.
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Test
+        run: |
+          cargo test --verbose
+
   publish:
+    needs: test
     runs-on: ubuntu-latest
     environment: release
     permissions:
@@ -17,10 +31,24 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
-      - name: Verify tag is on main
+        with:
+          persist-credentials: false
+      - name: Verify tag name matches the crate version
         run: |
-          git fetch origin main
-          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          if [[ ! "$GITHUB_REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Release tag must look like vX.Y.Z, got $GITHUB_REF"
+            exit 1
+          fi
+          version="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "uast") | .version')"
+          if [[ "${GITHUB_REF_NAME#v}" != "$version" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match Cargo.toml version $version"
+            exit 1
+          fi
+      - name: Verify tag is on main
+        # Fully qualified refs, so a tag named like a branch (for example "origin/main") cannot stand in for main.
+        run: |
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          git merge-base --is-ancestor "$GITHUB_SHA" refs/remotes/origin/main
 
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth

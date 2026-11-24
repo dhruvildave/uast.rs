@@ -116,20 +116,20 @@ static CHAR_DICT: Script = Script {
 };
 
 impl Script {
-    fn get_vowel(&self, c: char) -> Option<String> {
-        binary_search(&self.vowels, c, |i| i.to_string())
+    fn get_vowel(&self, c: char) -> Option<&'static str> {
+        binary_search(&self.vowels, c, |i| i)
     }
 
-    fn get_misc(&self, c: char) -> Option<String> {
-        binary_search(&self.misc, c, |i| i.to_string())
+    fn get_misc(&self, c: char) -> Option<&'static str> {
+        binary_search(&self.misc, c, |i| i)
     }
 
-    fn get_vowelsign(&self, c: char) -> Option<String> {
-        binary_search(&self.vowel_signs, c, |i| i.to_string())
+    fn get_vowelsign(&self, c: char) -> Option<&'static str> {
+        binary_search(&self.vowel_signs, c, |i| i)
     }
 
-    fn get_consonant(&self, c: char) -> Option<String> {
-        binary_search(&self.consonants, c, |i| i.to_string())
+    fn get_consonant(&self, c: char) -> Option<&'static str> {
+        binary_search(&self.consonants, c, |i| i)
     }
 
     fn contains_consonant(&self, c: char) -> bool {
@@ -144,52 +144,53 @@ impl Script {
 fn convertor(dn: &str) -> String {
     let str = dn.to_lowercase().chars().collect::<Vec<char>>();
 
-    let mut arr = Vec::<String>::with_capacity(str.len());
+    // Build the result in one buffer instead of one String per output glyph.
+    let mut out = String::with_capacity(dn.len());
 
     let mut i = 0;
 
     // if starts with vowel
     if let Some(v) = CHAR_DICT.get_vowel(str[i]) {
-        arr.push(v);
+        out.push_str(v);
         i += 1;
     }
 
     while i < str.len() {
         if str[i] == CHAR_DICT.specials.om || str[i] == CHAR_DICT.specials.saṃkṣipta {
-            arr.push(str[i].to_string());
+            out.push(str[i]);
             i += 1;
             continue;
         }
 
         if let Some(v) = CHAR_DICT.get_misc(str[i]) {
-            arr.push(v);
+            out.push_str(v);
             i += 1;
             continue;
         }
 
         if str[i] == CHAR_DICT.specials.anusvāra {
-            arr.push("ṃ".to_string());
+            out.push_str("ṃ");
             i += 1;
             continue;
         }
 
         if str[i] == CHAR_DICT.specials.visarga {
-            arr.push("ḥ".to_string());
+            out.push_str("ḥ");
             i += 1;
             continue;
         }
 
         if str[i] == CHAR_DICT.specials.candrabindu {
-            arr.push("ã".to_string());
+            out.push_str("ã");
             i += 1;
             continue;
         }
 
         if let Some(c) = CHAR_DICT.get_consonant(str[i]) {
-            arr.push(c);
+            out.push_str(c);
 
             if i + 1 == str.len() {
-                arr.push("a".to_string());
+                out.push('a');
                 i += 1;
                 continue;
             }
@@ -201,7 +202,7 @@ fn convertor(dn: &str) -> String {
             }
 
             if let Some(s) = CHAR_DICT.get_vowelsign(v) {
-                arr.push(s);
+                out.push_str(s);
                 i += 2;
                 continue;
             }
@@ -212,7 +213,7 @@ fn convertor(dn: &str) -> String {
                 || v == CHAR_DICT.specials.visarga
                 || v == CHAR_DICT.specials.candrabindu
             {
-                arr.push("a".to_string());
+                out.push('a');
                 i += 1;
                 continue;
             }
@@ -221,7 +222,7 @@ fn convertor(dn: &str) -> String {
         i += 1;
     }
 
-    arr.join("")
+    out
 }
 
 /// This function converts देवनागरी to IAST.
@@ -237,4 +238,19 @@ fn convertor(dn: &str) -> String {
 /// ```
 pub fn devanāgarī_to_iast(dn: &str) -> String {
     split_line_and_convert(convertor, dn)
+}
+
+#[cfg(test)]
+mod invariants {
+    use super::*;
+    use crate::utils::keys_strictly_increasing;
+
+    #[test]
+    fn tables_are_strictly_sorted() {
+        // `utils::binary_search` needs every table sorted by its char key.
+        assert!(keys_strictly_increasing(&CHAR_DICT.vowels));
+        assert!(keys_strictly_increasing(&CHAR_DICT.vowel_signs));
+        assert!(keys_strictly_increasing(&CHAR_DICT.consonants));
+        assert!(keys_strictly_increasing(&CHAR_DICT.misc));
+    }
 }

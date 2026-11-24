@@ -20,45 +20,47 @@ struct LangMap {
 }
 
 impl LangMap {
-    fn binary_search(arr: &[T], c: &[char]) -> Option<String> {
+    fn binary_search(arr: &[T], c: &[char]) -> Option<char> {
         arr.binary_search_by(|v| v.0.chars().cmp(c.iter().copied()))
             .ok()
-            .map(|i| arr[i].1.to_string())
+            .map(|i| arr[i].1)
     }
 
-    fn get_vowel(&self, c: &[char]) -> Option<String> {
+    fn get_vowel(&self, c: &[char]) -> Option<char> {
         Self::binary_search(&self.vowels, c)
     }
 
-    fn get_vowelsign(&self, c: &[char]) -> Option<String> {
+    fn get_vowelsign(&self, c: &[char]) -> Option<char> {
         Self::binary_search(&self.vowel_signs, c)
     }
 
-    fn get_number(&self, c: &[char]) -> Option<String> {
+    fn get_number(&self, c: &[char]) -> Option<char> {
         Self::binary_search(&self.numbers, c)
     }
 
-    fn get_misc(&self, c: &[char]) -> Option<String> {
+    fn get_misc(&self, c: &[char]) -> Option<char> {
         Self::binary_search(&self.misc, c)
     }
 
-    fn get_consonant(&self, c: &[char]) -> Option<String> {
+    fn get_consonant(&self, c: &[char]) -> Option<char> {
         Self::binary_search(&self.consonants, c)
     }
 
-    fn contains(arr: &[T], c: &str) -> bool {
+    fn contains(arr: &[T], c: char) -> bool {
+        let mut buf = [0u8; 4];
+        let c: &str = c.encode_utf8(&mut buf);
         arr.binary_search_by(|v| v.0.cmp(&c)).is_ok()
     }
 
-    fn contains_vowel(&self, c: &str) -> bool {
+    fn contains_vowel(&self, c: char) -> bool {
         Self::contains(&self.vowels, c)
     }
 
-    fn contains_vowelsign(&self, c: &str) -> bool {
+    fn contains_vowelsign(&self, c: char) -> bool {
         Self::contains(&self.vowel_signs, c)
     }
 
-    fn contains_consonant(&self, c: &str) -> bool {
+    fn contains_consonant(&self, c: char) -> bool {
         Self::contains(&self.consonants, c)
     }
 }
@@ -292,7 +294,8 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         return "".to_string();
     }
 
-    let mut arr = Vec::<String>::with_capacity(data.len());
+    // Build the result in one buffer. Most output chars are 3-byte UTF-8, so this is a capacity hint.
+    let mut out = String::with_capacity(data.len() * 3);
     let mut i = 0;
 
     // here's a little thing about how saṃskṛta and devanāgarī work:
@@ -305,7 +308,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     // at end of word to represent a consonant without a corresponding vowel with it.
 
     // starts with vowel
-    if LangMap::contains_vowel(&CHAR_DICT, data[0].to_string().as_str()) {
+    if LangMap::contains_vowel(&CHAR_DICT, data[0]) {
         if i + 1 < data.len() && data[0] == 'a' && (data[1] == 'i' || data[1] == 'u') {
             i = 2;
         } else {
@@ -313,50 +316,49 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         // a valid vowel exists here
-        arr.push(CHAR_DICT.get_vowel(&data[0..i]).unwrap());
+        out.push(CHAR_DICT.get_vowel(&data[0..i]).unwrap());
     }
 
     while i < data.len() {
         if char_slice_contains(&VEDA_ACCENTS, data[i]) {
-            arr.push(data[i].to_string());
+            out.push(data[i]);
             i += 1;
             continue;
         }
 
         if data[i] == CHAR_DICT.specials.om {
-            arr.push(CHAR_DICT.specials.om.to_string());
+            out.push(CHAR_DICT.specials.om);
             i += 1;
             continue;
         }
 
         if data[i] == CHAR_DICT.specials.saṃkṣipta {
-            arr.push(CHAR_DICT.specials.saṃkṣipta.to_string());
+            out.push(CHAR_DICT.specials.saṃkṣipta);
             i += 1;
             continue;
         }
 
-        let c = data[i].to_string();
         if let Some(v) = CHAR_DICT.get_misc(&data[i..i + 1]) {
             if i + 1 < data.len() && data[i] == '.' && data[i + 1] == '.' {
-                arr.push('॥'.to_string());
+                out.push('॥');
                 i += 2;
             } else {
-                arr.push(v.to_string());
+                out.push(v);
                 i += 1;
             }
             continue;
         }
 
         if let Some(v) = CHAR_DICT.get_number(&data[i..i + 1]) {
-            arr.push(v.to_string());
+            out.push(v);
             i += 1;
             continue;
         }
 
         // at this point, if we find any illegal character then we simply ignore it
-        if !LangMap::contains_vowelsign(&CHAR_DICT, c.as_str())
-            && !LangMap::contains_vowel(&CHAR_DICT, c.as_str())
-            && !LangMap::contains_consonant(&CHAR_DICT, c.as_str())
+        if !LangMap::contains_vowelsign(&CHAR_DICT, data[i])
+            && !LangMap::contains_vowel(&CHAR_DICT, data[i])
+            && !LangMap::contains_consonant(&CHAR_DICT, data[i])
         {
             i += 1;
             continue;
@@ -367,37 +369,35 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
             && data[i + 1] == 'h'
         {
             // a valid aspirated consonant exists here
-            arr.push(CHAR_DICT.get_consonant(&data[i..i + 2]).unwrap());
+            out.push(CHAR_DICT.get_consonant(&data[i..i + 2]).unwrap());
             i += 2;
         } else {
             // if valid consonant then push it else ignore invalid consonants completely
             if let Some(v) = CHAR_DICT.get_consonant(&data[i..i + 1]) {
-                arr.push(v.to_string());
+                out.push(v);
                 i += 1;
             }
         }
 
         // if end of word or anything other than a vowel-sign then we just push a halanta and start the process again
-        if i == data.len()
-            || (!LangMap::contains_vowelsign(&CHAR_DICT, data[i].to_string().as_str())
-                && data[i] != 'a')
+        if i == data.len() || (!LangMap::contains_vowelsign(&CHAR_DICT, data[i]) && data[i] != 'a')
         {
-            arr.push(CHAR_DICT.specials.halanta.to_string());
+            out.push(CHAR_DICT.specials.halanta);
             continue;
         }
 
         if i + 1 < data.len() && data[i] == 'a' && (data[i + 1] == 'i' || data[i + 1] == 'u') {
-            arr.push(CHAR_DICT.get_vowelsign(&data[i..i + 2]).unwrap());
+            out.push(CHAR_DICT.get_vowelsign(&data[i..i + 2]).unwrap());
             i += 2;
         } else {
             if data[i] != 'a' {
-                arr.push(CHAR_DICT.get_vowelsign(&data[i..i + 1]).unwrap());
+                out.push(CHAR_DICT.get_vowelsign(&data[i..i + 1]).unwrap());
             }
             i += 1;
         }
     }
 
-    arr.join("")
+    out
 }
 
 fn convertor(line: &str) -> String {
@@ -418,4 +418,85 @@ fn convertor(line: &str) -> String {
 /// ```
 pub fn uast_to_devanāgarī(line: &str) -> String {
     split_line_and_convert(convertor, line)
+}
+
+#[cfg(test)]
+mod invariants {
+    //! The lookups in this module use binary search, and the `unwrap()` calls in
+    //! `iast_to_devanāgarī` are safe only because of the table facts checked here.
+    //! These tests stop a future table edit from becoming a wrong lookup or a panic.
+
+    use super::*;
+    use crate::utils::{keys_strictly_increasing, strictly_increasing};
+
+    #[test]
+    fn tables_are_strictly_sorted() {
+        // `get_*` compares the `&str` keys by char and `contains` compares them by byte.
+        // UTF-8 byte order matches code point order, so one check covers both lookups.
+        assert!(keys_strictly_increasing(&UNICODE_MAP));
+        assert!(keys_strictly_increasing(&CHAR_DICT.misc));
+        assert!(keys_strictly_increasing(&CHAR_DICT.numbers));
+        assert!(keys_strictly_increasing(&CHAR_DICT.vowels));
+        assert!(keys_strictly_increasing(&CHAR_DICT.vowel_signs));
+        assert!(keys_strictly_increasing(&CHAR_DICT.consonants));
+        assert!(strictly_increasing(VEDA_ACCENTS));
+        assert!(strictly_increasing(UNASPIRATED_CONSONANTS));
+    }
+
+    #[test]
+    fn hand_written_searches_find_every_entry() {
+        for &(k, v) in &UNICODE_MAP {
+            assert_eq!(
+                unicode_map_binary_search(k),
+                Some(v),
+                "UNICODE_MAP key {k:?}"
+            );
+        }
+        assert_eq!(unicode_map_binary_search(""), None);
+        assert_eq!(unicode_map_binary_search("zz"), None);
+
+        for &c in &VEDA_ACCENTS {
+            assert!(char_slice_contains(&VEDA_ACCENTS, c));
+        }
+        for &c in &UNASPIRATED_CONSONANTS {
+            assert!(char_slice_contains(&UNASPIRATED_CONSONANTS, c));
+        }
+        assert!(!char_slice_contains(&UNASPIRATED_CONSONANTS, 'a'));
+        assert!(!char_slice_contains(&UNASPIRATED_CONSONANTS, 'z'));
+    }
+
+    #[test]
+    fn aspirated_consonants_exist() {
+        // Unwrapped: the lookup of an unaspirated consonant followed by 'h'.
+        for &c in &UNASPIRATED_CONSONANTS {
+            assert!(CHAR_DICT.get_consonant(&[c, 'h']).is_some(), "missing {c}h");
+        }
+    }
+
+    #[test]
+    fn diphthongs_are_vowels_and_vowel_signs() {
+        // Unwrapped: the lookup of "ai" and "au" as a vowel and as a vowel sign.
+        for d in [['a', 'i'], ['a', 'u']] {
+            assert!(CHAR_DICT.get_vowel(&d).is_some());
+            assert!(CHAR_DICT.get_vowelsign(&d).is_some());
+        }
+    }
+
+    #[test]
+    fn single_char_vowels_other_than_a_are_vowel_signs() {
+        // Unwrapped: a one-char vowel that reaches the vowel-sign branch is looked up as a sign.
+        // Only 'a' (the inherent vowel) has no sign, and the converter handles it separately.
+        fn singles(arr: &[T]) -> Vec<&'static str> {
+            arr.iter()
+                .map(|v| v.0)
+                .filter(|k| k.chars().count() == 1)
+                .collect()
+        }
+
+        let vowels: Vec<&'static str> = singles(&CHAR_DICT.vowels)
+            .into_iter()
+            .filter(|&k| k != "a")
+            .collect();
+        assert_eq!(vowels, singles(&CHAR_DICT.vowel_signs));
+    }
 }

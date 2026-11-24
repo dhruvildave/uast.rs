@@ -103,3 +103,151 @@ fn test_slp_to_iast() {
         assert_eq!(slp_to_iast(k), v);
     }
 }
+
+/// All four public converters, for property-style tests.
+fn converters() -> [(&'static str, fn(&str) -> String); 4] {
+    [
+        ("uast_to_devanāgarī", crate::uast_to_devanāgarī),
+        ("devanāgarī_to_iast", crate::devanāgarī_to_iast),
+        ("devanāgarī_to_gujarātī", crate::devanāgarī_to_gujarātī),
+        ("slp_to_iast", crate::slp_to_iast),
+    ]
+}
+
+/// The converters emit only table characters and spaces: never control, format, or markup
+/// characters. See "Output" in the crate docs.
+fn output_is_in_alphabet(out: &str) -> bool {
+    out.chars().all(|c| {
+        !c.is_control()
+            && !matches!(
+                c,
+                '\u{200B}'..='\u{200F}'
+                    | '\u{202A}'..='\u{202E}'
+                    | '\u{2060}'..='\u{2069}'
+                    | '\u{FEFF}'
+                    | '\u{FFFD}'
+                    | '<'
+                    | '>'
+                    | '&'
+                    | '"'
+                    | '`'
+                    | '\\'
+                    | '/'
+            )
+    })
+}
+
+/// Runs every converter on `input` and checks that the output stays in the documented alphabet.
+fn check_all_converters(input: &str) {
+    for (name, f) in converters() {
+        let out = f(input);
+        assert!(
+            output_is_in_alphabet(&out),
+            "{name}({input:?}) produced {out:?}"
+        );
+    }
+}
+
+/// Inputs that exercise empty words, the `/.../` escape syntax, case folding, missing
+/// normalization, and characters every converter drops.
+const EDGE_CASES: &[&str] = &[
+    "",
+    " ",
+    "\n",
+    "/",
+    "//",
+    "///",
+    "/om",
+    "/om/",
+    "a/",
+    "/a",
+    "'i",
+    ".",
+    "..",
+    "...",
+    "h",
+    "kh",
+    "ai",
+    "au",
+    "aia",
+    "KA",
+    "\u{212A}a",        // KELVIN SIGN lowercases to 'k'
+    "a\u{0304}",        // decomposed ā
+    "k\u{200D}a",       // ZERO WIDTH JOINER
+    "\u{FEFF}k",        // BYTE ORDER MARK
+    "\u{0915}\u{094D}", // क्
+    "\u{0915}\u{093F}", // कि
+    "\u{0950}",         // ॐ
+    "\u{0902}",         // ं
+    "\u{094D}",         // ्
+    "\u{1F600}",        // emoji
+    "\u{0000}",         // NUL
+    "\u{001B}[31m",     // terminal escape sequence
+    "<script>&\"'`\\</script>",
+];
+
+#[test]
+fn edge_cases_do_not_panic_and_stay_in_the_output_alphabet() {
+    for input in EDGE_CASES {
+        check_all_converters(input);
+    }
+}
+
+#[test]
+fn short_strings_over_a_mixed_alphabet_do_not_panic() {
+    // Every string of up to three characters drawn from table keys, escape syntax, case-folding
+    // and normalization edge cases, and characters that every converter drops.
+    const ALPHABET: &[char] = &[
+        'a', 'i', 'u', 'h', 'k', 'd', 'o', 'm', 'l', 'n', 's', 'A', 'B', 'K', '/', '.', '\'', '-',
+        '~', '0', '\u{1E0D}', // ḍ
+        '\u{212A}', // KELVIN SIGN
+        '\u{0304}', // COMBINING MACRON
+        '\u{200D}', // ZERO WIDTH JOINER
+        '\u{0951}', // Vedic udātta accent
+        '\u{0950}', // ॐ
+        '\u{0915}', // क
+        '\u{094D}', // ्
+        '\u{093F}', // ि
+        '\u{0902}', // ं
+        '\u{0964}', // ।
+        '\u{0970}', // ॰
+    ];
+
+    let options: Vec<Option<char>> = std::iter::once(None)
+        .chain(ALPHABET.iter().copied().map(Some))
+        .collect();
+
+    for &a in &options {
+        for &b in &options {
+            for &c in &options {
+                let word: String = [a, b, c].into_iter().flatten().collect();
+                check_all_converters(&word);
+            }
+        }
+    }
+}
+
+#[test]
+fn uast_escape_edge_cases() {
+    use crate::uast_to_devanāgarī as f;
+
+    assert_eq!(f(""), "");
+    assert_eq!(f("/"), "");
+    assert_eq!(f("//"), "");
+    // An unterminated escape still decodes.
+    assert_eq!(f("/om"), "\u{0950}"); // ॐ
+    // An apostrophe becomes avagraha, and the following vowel becomes a dependent sign.
+    assert_eq!(f("'i"), "\u{093D}\u{093F}"); // ऽि
+}
+
+#[test]
+fn uast_lowercases_and_does_not_normalize() {
+    use crate::uast_to_devanāgarī as f;
+
+    assert_eq!(f("R/A/MA"), f("r/a/ma"));
+    // KELVIN SIGN (U+212A) lowercases to ASCII 'k'.
+    assert_eq!(f("\u{212A}a"), f("ka"));
+    // No normalization: a decomposed ā (a + U+0304) loses its combining mark.
+    assert_eq!(f("a\u{0304}"), f("a"));
+    assert_ne!(f("a\u{0304}"), f("\u{0101}"));
+}

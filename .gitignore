@@ -157,3 +157,8 @@ fabric.properties
 bin/
 .crates.toml
 .crates2.json
+
+# Local secrets and keys
+.env
+*.pem
+*.key

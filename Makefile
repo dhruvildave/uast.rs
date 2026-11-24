@@ -28,5 +28,5 @@ cover:
 	./bin/cargo-tarpaulin --exclude-files src/main.rs
 
 msrv:
-	[ -f "/bin/cargo-msrv" ] || cargo install cargo-msrv --root .
+	[ -f "./bin/cargo-msrv" ] || cargo install cargo-msrv --root .
 	./bin/cargo-msrv find

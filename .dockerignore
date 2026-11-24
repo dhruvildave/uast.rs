@@ -1,35 +1,12 @@
-# Include any files or directories that you don't want to be copied to your
-# container here (e.g., local build artifacts, temporary files, etc.).
-#
+# Allowlist: exclude everything from the build context, then re-include only what the image build needs.
 # For more help, visit the .dockerignore file reference guide at
 # https://docs.docker.com/go/build-context-dockerignore/
 
+*
+!src
+!Cargo.toml
+!Makefile
+
+# Never send editor or backup files, even inside re-included paths.
 **/.DS_Store
-**/.classpath
-**/.dockerignore
-**/.env
-**/.git
-**/.gitignore
-**/.project
-**/.settings
-**/.toolstarget
-**/.vs
-**/.vscode
-**/.devcontainer
-**/.github
-**/*.*proj.user
-**/*.dbmdl
-**/*.jfm
-**/charts
-**/docker-compose*
-**/compose.y*ml
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
-**/secrets.dev.yaml
-**/values.dev.yaml
-/bin
-/target
-LICENSE
-README.md
-uast_poster.png
+**/*.rs.bk
