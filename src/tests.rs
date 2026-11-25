@@ -236,7 +236,7 @@ fn uast_escape_edge_cases() {
     assert_eq!(f("//"), "");
     // An unterminated escape still decodes.
     assert_eq!(f("/om"), "\u{0950}"); // ॐ
-    // An apostrophe becomes avagraha, and the following vowel becomes a dependent sign.
+                                      // An apostrophe becomes avagraha, and the following vowel becomes a dependent sign.
     assert_eq!(f("'i"), "\u{093D}\u{093F}"); // ऽि
 }
 

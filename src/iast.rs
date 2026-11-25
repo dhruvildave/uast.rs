@@ -13,16 +13,16 @@ struct ScriptSpecials {
     saṃkṣipta: char,
 }
 
-struct Script {
-    vowels: [T; 14],
-    vowel_signs: [T; 13],
-    consonants: [T; 34],
-    misc: [T; 14],
-    specials: ScriptSpecials,
+struct Script<'a> {
+    vowels: &'a [T; 14],
+    vowel_signs: &'a [T; 13],
+    consonants: &'a [T; 34],
+    misc: &'a [T; 14],
+    specials: &'a ScriptSpecials,
 }
 
-static CHAR_DICT: Script = Script {
-    vowels: [
+static CHAR_DICT: &Script = &Script {
+    vowels: &[
         ('अ', "a"),
         ('आ', "ā"),
         ('इ', "i"),
@@ -38,7 +38,7 @@ static CHAR_DICT: Script = Script {
         ('ॠ', "ṝ"),
         ('ॡ', "ḹ"),
     ],
-    vowel_signs: [
+    vowel_signs: &[
         ('ा', "ā"),
         ('ि', "i"),
         ('ी', "ī"),
@@ -53,7 +53,7 @@ static CHAR_DICT: Script = Script {
         ('ॢ', "ḷ"),
         ('ॣ', "ḹ"),
     ],
-    consonants: [
+    consonants: &[
         ('क', "k"),
         ('ख', "kh"),
         ('ग', "g"),
@@ -89,7 +89,7 @@ static CHAR_DICT: Script = Script {
         ('स', "s"),
         ('ह', "h"),
     ],
-    misc: [
+    misc: &[
         ('ऽ', "'"),
         ('।', "."),
         ('॥', ".."),
@@ -105,7 +105,7 @@ static CHAR_DICT: Script = Script {
         ('९', "9"),
         ('ॱ', "-"),
     ],
-    specials: ScriptSpecials {
+    specials: &ScriptSpecials {
         om: 'ॐ',
         anusvāra: 'ं',
         visarga: 'ः',
@@ -115,29 +115,29 @@ static CHAR_DICT: Script = Script {
     },
 };
 
-impl Script {
+impl Script<'_> {
     fn get_vowel(&self, c: char) -> Option<&'static str> {
-        binary_search(&self.vowels, c, |i| i)
+        binary_search(self.vowels, c, |i| i)
     }
 
     fn get_misc(&self, c: char) -> Option<&'static str> {
-        binary_search(&self.misc, c, |i| i)
+        binary_search(self.misc, c, |i| i)
     }
 
     fn get_vowelsign(&self, c: char) -> Option<&'static str> {
-        binary_search(&self.vowel_signs, c, |i| i)
+        binary_search(self.vowel_signs, c, |i| i)
     }
 
     fn get_consonant(&self, c: char) -> Option<&'static str> {
-        binary_search(&self.consonants, c, |i| i)
+        binary_search(self.consonants, c, |i| i)
     }
 
     fn contains_consonant(&self, c: char) -> bool {
-        binary_search(&self.consonants, c, |i| i).is_some()
+        binary_search(self.consonants, c, |i| i).is_some()
     }
 
     fn contains_misc(&self, c: char) -> bool {
-        binary_search(&self.misc, c, |i| i).is_some()
+        binary_search(self.misc, c, |i| i).is_some()
     }
 }
 
@@ -248,9 +248,9 @@ mod invariants {
     #[test]
     fn tables_are_strictly_sorted() {
         // `utils::binary_search` needs every table sorted by its char key.
-        assert!(keys_strictly_increasing(&CHAR_DICT.vowels));
-        assert!(keys_strictly_increasing(&CHAR_DICT.vowel_signs));
-        assert!(keys_strictly_increasing(&CHAR_DICT.consonants));
-        assert!(keys_strictly_increasing(&CHAR_DICT.misc));
+        assert!(keys_strictly_increasing(CHAR_DICT.vowels));
+        assert!(keys_strictly_increasing(CHAR_DICT.vowel_signs));
+        assert!(keys_strictly_increasing(CHAR_DICT.consonants));
+        assert!(keys_strictly_increasing(CHAR_DICT.misc));
     }
 }

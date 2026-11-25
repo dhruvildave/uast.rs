@@ -10,16 +10,16 @@ struct ScriptSpecials {
     saṃkṣipta: char,
 }
 
-struct LangMap {
-    misc: [T; 7],
-    numbers: [T; 10],
-    vowels: [T; 14],
-    vowel_signs: [T; 13],
-    consonants: [T; 34],
-    specials: ScriptSpecials,
+struct LangMap<'a> {
+    misc: &'a [T; 7],
+    numbers: &'a [T; 10],
+    vowels: &'a [T; 14],
+    vowel_signs: &'a [T; 13],
+    consonants: &'a [T; 34],
+    specials: &'a ScriptSpecials,
 }
 
-impl LangMap {
+impl LangMap<'_> {
     fn binary_search(arr: &[T], c: &[char]) -> Option<char> {
         arr.binary_search_by(|v| v.0.chars().cmp(c.iter().copied()))
             .ok()
@@ -27,23 +27,23 @@ impl LangMap {
     }
 
     fn get_vowel(&self, c: &[char]) -> Option<char> {
-        Self::binary_search(&self.vowels, c)
+        Self::binary_search(self.vowels, c)
     }
 
     fn get_vowelsign(&self, c: &[char]) -> Option<char> {
-        Self::binary_search(&self.vowel_signs, c)
+        Self::binary_search(self.vowel_signs, c)
     }
 
     fn get_number(&self, c: &[char]) -> Option<char> {
-        Self::binary_search(&self.numbers, c)
+        Self::binary_search(self.numbers, c)
     }
 
     fn get_misc(&self, c: &[char]) -> Option<char> {
-        Self::binary_search(&self.misc, c)
+        Self::binary_search(self.misc, c)
     }
 
     fn get_consonant(&self, c: &[char]) -> Option<char> {
-        Self::binary_search(&self.consonants, c)
+        Self::binary_search(self.consonants, c)
     }
 
     fn contains(arr: &[T], c: char) -> bool {
@@ -53,21 +53,21 @@ impl LangMap {
     }
 
     fn contains_vowel(&self, c: char) -> bool {
-        Self::contains(&self.vowels, c)
+        Self::contains(self.vowels, c)
     }
 
     fn contains_vowelsign(&self, c: char) -> bool {
-        Self::contains(&self.vowel_signs, c)
+        Self::contains(self.vowel_signs, c)
     }
 
     fn contains_consonant(&self, c: char) -> bool {
-        Self::contains(&self.consonants, c)
+        Self::contains(self.consonants, c)
     }
 }
 
-static VEDA_ACCENTS: [char; 14] = ['॑', '॒', '᳚', '꣠', '꣡', '꣢', '꣣', '꣤', '꣥', '꣦', '꣧', '꣨', '꣩', 'ꣳ'];
+static VEDA_ACCENTS: &[char; 14] = &['॑', '॒', '᳚', '꣠', '꣡', '꣢', '꣣', '꣤', '꣥', '꣦', '꣧', '꣨', '꣩', 'ꣳ'];
 
-static UNICODE_MAP: [T; 34] = [
+static UNICODE_MAP: &[T; 34] = &[
     ("'", '॑'),
     ("''", '᳚'),
     ("-", '॒'),
@@ -127,8 +127,8 @@ fn unicode_map_binary_search(c: &str) -> Option<char> {
     None
 }
 
-static CHAR_DICT: LangMap = LangMap {
-    misc: [
+static CHAR_DICT: &LangMap = &LangMap {
+    misc: &[
         ("'", 'ऽ'),
         ("-", 'ॱ'),
         (".", '।'),
@@ -137,7 +137,7 @@ static CHAR_DICT: LangMap = LangMap {
         ("ḥ", 'ः'),
         ("ṃ", 'ं'),
     ],
-    numbers: [
+    numbers: &[
         ("0", '०'),
         ("1", '१'),
         ("2", '२'),
@@ -149,7 +149,7 @@ static CHAR_DICT: LangMap = LangMap {
         ("8", '८'),
         ("9", '९'),
     ],
-    vowels: [
+    vowels: &[
         ("a", 'अ'),
         ("ai", 'ऐ'),
         ("au", 'औ'),
@@ -165,7 +165,7 @@ static CHAR_DICT: LangMap = LangMap {
         ("ṛ", 'ऋ'),
         ("ṝ", 'ॠ'),
     ],
-    vowel_signs: [
+    vowel_signs: &[
         ("ai", 'ै'),
         ("au", 'ौ'),
         ("e", 'े'),
@@ -180,7 +180,7 @@ static CHAR_DICT: LangMap = LangMap {
         ("ṛ", 'ृ'),
         ("ṝ", 'ॄ'),
     ],
-    consonants: [
+    consonants: &[
         ("b", 'ब'),
         ("bh", 'भ'),
         ("c", 'च'),
@@ -216,14 +216,14 @@ static CHAR_DICT: LangMap = LangMap {
         ("ṭ", 'ट'),
         ("ṭh", 'ठ'),
     ],
-    specials: ScriptSpecials {
+    specials: &ScriptSpecials {
         om: 'ॐ',
         halanta: '्',
         saṃkṣipta: '॰',
     },
 };
 
-static UNASPIRATED_CONSONANTS: [char; 10] = ['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
+static UNASPIRATED_CONSONANTS: &[char; 10] = &['b', 'c', 'd', 'g', 'j', 'k', 'p', 't', 'ḍ', 'ṭ'];
 
 fn char_slice_contains(slice: &[char], c: char) -> bool {
     let mut i = 0_isize;
@@ -308,7 +308,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     // at end of word to represent a consonant without a corresponding vowel with it.
 
     // starts with vowel
-    if LangMap::contains_vowel(&CHAR_DICT, data[0]) {
+    if LangMap::contains_vowel(CHAR_DICT, data[0]) {
         if i + 1 < data.len() && data[0] == 'a' && (data[1] == 'i' || data[1] == 'u') {
             i = 2;
         } else {
@@ -320,7 +320,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
     }
 
     while i < data.len() {
-        if char_slice_contains(&VEDA_ACCENTS, data[i]) {
+        if char_slice_contains(VEDA_ACCENTS, data[i]) {
             out.push(data[i]);
             i += 1;
             continue;
@@ -356,16 +356,16 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         // at this point, if we find any illegal character then we simply ignore it
-        if !LangMap::contains_vowelsign(&CHAR_DICT, data[i])
-            && !LangMap::contains_vowel(&CHAR_DICT, data[i])
-            && !LangMap::contains_consonant(&CHAR_DICT, data[i])
+        if !LangMap::contains_vowelsign(CHAR_DICT, data[i])
+            && !LangMap::contains_vowel(CHAR_DICT, data[i])
+            && !LangMap::contains_consonant(CHAR_DICT, data[i])
         {
             i += 1;
             continue;
         }
 
         if i + 1 < data.len()
-            && char_slice_contains(&UNASPIRATED_CONSONANTS, data[i])
+            && char_slice_contains(UNASPIRATED_CONSONANTS, data[i])
             && data[i + 1] == 'h'
         {
             // a valid aspirated consonant exists here
@@ -380,8 +380,7 @@ fn iast_to_devanāgarī(data: Vec<char>) -> String {
         }
 
         // if end of word or anything other than a vowel-sign then we just push a halanta and start the process again
-        if i == data.len() || (!LangMap::contains_vowelsign(&CHAR_DICT, data[i]) && data[i] != 'a')
-        {
+        if i == data.len() || (!LangMap::contains_vowelsign(CHAR_DICT, data[i]) && data[i] != 'a') {
             out.push(CHAR_DICT.specials.halanta);
             continue;
         }
@@ -433,19 +432,19 @@ mod invariants {
     fn tables_are_strictly_sorted() {
         // `get_*` compares the `&str` keys by char and `contains` compares them by byte.
         // UTF-8 byte order matches code point order, so one check covers both lookups.
-        assert!(keys_strictly_increasing(&UNICODE_MAP));
-        assert!(keys_strictly_increasing(&CHAR_DICT.misc));
-        assert!(keys_strictly_increasing(&CHAR_DICT.numbers));
-        assert!(keys_strictly_increasing(&CHAR_DICT.vowels));
-        assert!(keys_strictly_increasing(&CHAR_DICT.vowel_signs));
-        assert!(keys_strictly_increasing(&CHAR_DICT.consonants));
+        assert!(keys_strictly_increasing(UNICODE_MAP));
+        assert!(keys_strictly_increasing(CHAR_DICT.misc));
+        assert!(keys_strictly_increasing(CHAR_DICT.numbers));
+        assert!(keys_strictly_increasing(CHAR_DICT.vowels));
+        assert!(keys_strictly_increasing(CHAR_DICT.vowel_signs));
+        assert!(keys_strictly_increasing(CHAR_DICT.consonants));
         assert!(strictly_increasing(VEDA_ACCENTS));
         assert!(strictly_increasing(UNASPIRATED_CONSONANTS));
     }
 
     #[test]
     fn hand_written_searches_find_every_entry() {
-        for &(k, v) in &UNICODE_MAP {
+        for &(k, v) in UNICODE_MAP {
             assert_eq!(
                 unicode_map_binary_search(k),
                 Some(v),
@@ -455,20 +454,20 @@ mod invariants {
         assert_eq!(unicode_map_binary_search(""), None);
         assert_eq!(unicode_map_binary_search("zz"), None);
 
-        for &c in &VEDA_ACCENTS {
-            assert!(char_slice_contains(&VEDA_ACCENTS, c));
+        for &c in VEDA_ACCENTS {
+            assert!(char_slice_contains(VEDA_ACCENTS, c));
         }
-        for &c in &UNASPIRATED_CONSONANTS {
-            assert!(char_slice_contains(&UNASPIRATED_CONSONANTS, c));
+        for &c in UNASPIRATED_CONSONANTS {
+            assert!(char_slice_contains(UNASPIRATED_CONSONANTS, c));
         }
-        assert!(!char_slice_contains(&UNASPIRATED_CONSONANTS, 'a'));
-        assert!(!char_slice_contains(&UNASPIRATED_CONSONANTS, 'z'));
+        assert!(!char_slice_contains(UNASPIRATED_CONSONANTS, 'a'));
+        assert!(!char_slice_contains(UNASPIRATED_CONSONANTS, 'z'));
     }
 
     #[test]
     fn aspirated_consonants_exist() {
         // Unwrapped: the lookup of an unaspirated consonant followed by 'h'.
-        for &c in &UNASPIRATED_CONSONANTS {
+        for &c in UNASPIRATED_CONSONANTS {
             assert!(CHAR_DICT.get_consonant(&[c, 'h']).is_some(), "missing {c}h");
         }
     }
@@ -493,10 +492,10 @@ mod invariants {
                 .collect()
         }
 
-        let vowels: Vec<&'static str> = singles(&CHAR_DICT.vowels)
+        let vowels: Vec<&'static str> = singles(CHAR_DICT.vowels)
             .into_iter()
             .filter(|&k| k != "a")
             .collect();
-        assert_eq!(vowels, singles(&CHAR_DICT.vowel_signs));
+        assert_eq!(vowels, singles(CHAR_DICT.vowel_signs));
     }
 }

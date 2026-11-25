@@ -2,7 +2,7 @@
 
 use crate::utils::{binary_search, split_line_and_convert};
 
-static CHAR_DICT: [(char, &str); 63] = [
+static CHAR_DICT: &[(char, &str); 63] = &[
     ('\'', "'"),
     ('.', "."),
     ('0', "0"),
@@ -69,7 +69,7 @@ static CHAR_DICT: [(char, &str); 63] = [
 ];
 
 fn get_char(c: char) -> Option<&'static str> {
-    binary_search(&CHAR_DICT, c, |i| i)
+    binary_search(CHAR_DICT, c, |i| i)
 }
 
 fn convertor(dn: &str) -> String {
@@ -99,6 +99,6 @@ mod invariants {
     #[test]
     fn table_is_strictly_sorted() {
         // `utils::binary_search` needs the table sorted by its char key.
-        assert!(keys_strictly_increasing(&CHAR_DICT));
+        assert!(keys_strictly_increasing(CHAR_DICT));
     }
 }
